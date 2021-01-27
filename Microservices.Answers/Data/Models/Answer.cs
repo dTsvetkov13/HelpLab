@@ -10,16 +10,21 @@ namespace Microservices.Answers.Data.Models
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         public string Text { get; set; }
 
         [Required]
-        public DateTime Date { get; set; }
+        public DateTime PublishedAt { get; set; }
 
-        //AuthorId
-        //PostId
-        //Another answer key
+        public DateTime LastEditedAt { get; set; }
+
+        public string AuthorId { get; set; }
+
+        //TODO: add attribute
+        public Guid PostId { get; set; }
+
+        public Guid AnswerId { get; set; }
     }
 }

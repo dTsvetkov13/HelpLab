@@ -6,11 +6,11 @@ using System.Text;
 
 namespace Microservices.Posts.Data.Models
 {
-    class Question
+    class Post
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         public string Title { get; set; }
@@ -19,9 +19,10 @@ namespace Microservices.Posts.Data.Models
         public string Description { get; set; }
 
         [Required]
-        public DateTime Date { get; set; }
+        public DateTime PublishedAt { get; set; }
 
-        //AuthorId
-        //Answers
+        public DateTime LastEditedAt { get; set; }
+
+        public string AuthorId { get; set; }
     }
 }

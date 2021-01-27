@@ -11,8 +11,11 @@ namespace Microservices.Users.Data.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string Id { get; set; }
+        
+        public string Name { get; set; }
 
-        //public virtual ICollection<Answer> Answers { get; set; }
-        //Posts
+        public string Surname { get; set; }
+
+        //AvatarPhotoPath
     }
 }
