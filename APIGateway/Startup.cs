@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using APIGateway.Data.Models;
+using APIGateway.Services;
 
 namespace APIGateway
 {
@@ -29,6 +29,8 @@ namespace APIGateway
 
             services.AddDbContext<ApplicationDbContext>(options =>
                  options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddScoped<IUserService, UserService>();
 
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
