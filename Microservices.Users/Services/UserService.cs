@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microservices.Users.Entities;
+using Microservices.Users.Entities.Models;
 
 namespace Microservices.Users
 {
@@ -24,7 +25,7 @@ namespace Microservices.Users
 
         public async Task<TokenResponse> Authenticate(string username, string password)
         {
-            return await new HttpClient().RequestPasswordTokenAsync(new PasswordTokenRequest
+            TokenResponse result = await new HttpClient().RequestPasswordTokenAsync(new PasswordTokenRequest
             {
                 Address = "https://localhost:44395/connect/token",
 
@@ -34,11 +35,15 @@ namespace Microservices.Users
                 UserName = username,
                 Password = password
             });
+
+            return result;
         }
 
         public async Task<IdentityResult> Create(string username, string password, string email)
         {
-            return await _userManager.CreateAsync(new IdentityUser { UserName = username, Email = email }, password);
+            IdentityResult result = await _userManager.CreateAsync(new IdentityUser { UserName = username, Email = email }, password);
+
+            return result;
         }
 
         public async Task<IEnumerable<IdentityResult>> Update(
@@ -69,12 +74,16 @@ namespace Microservices.Users
 
         public async Task<IdentityUser> Get(string id)
         {
-            return await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
+            User result = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
+
+            return result;
         }
 
         public async Task<IdentityResult> Delete(string id)
         {
-            return await _userManager.DeleteAsync(await Get(id));
+            IdentityResult result = await _userManager.DeleteAsync(await Get(id));
+
+            return result;
         }
     }
 }
