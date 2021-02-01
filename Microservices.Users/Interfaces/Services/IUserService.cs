@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace APIGateway.Services
+namespace Microservices.Users
 {
     public interface IUserService
     {

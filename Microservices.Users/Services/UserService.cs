@@ -1,4 +1,4 @@
-﻿using APIGateway.Data;
+﻿using Microservices.Users;
 using IdentityModel.Client;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -7,8 +7,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microservices.Users.Entities;
 
-namespace APIGateway.Services
+namespace Microservices.Users
 {
     public class UserService : IUserService
     {
