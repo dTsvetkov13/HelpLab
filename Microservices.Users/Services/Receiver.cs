@@ -11,10 +11,11 @@ using System.Threading.Tasks;
 
 namespace Microservices.Users.Services
 {
-    public class Receiver : BackgroundService
+    public abstract class Receiver : BackgroundService
     {
-        private IModel _channel;
-        private IConnection _connection;
+        protected IModel _channel;
+        protected   IConnection _connection;
+        public string QueueName;
 
         public Receiver()
         {
@@ -24,28 +25,22 @@ namespace Microservices.Users.Services
             };
 
             _connection = factory.CreateConnection();
-            //_connection.ConnectionShutdown += RabbitMQ_ConnectionShutdown;
             _channel = _connection.CreateModel();
-            _channel.QueueDeclare(queue: "users", durable: false, exclusive: false, autoDelete: false, arguments: null);
+            QueueName = "users";
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             stoppingToken.ThrowIfCancellationRequested();
 
-            var consumer = new EventingBasicConsumer(_channel);
-            consumer.Received += (ch, ea) =>
-            {
-                var content = Encoding.UTF8.GetString(ea.Body.ToArray());
-                //var updateCustomerFullNameModel = JsonConvert.DeserializeObject<UpdateCustomerFullNameModel>(content);
-
-                Console.WriteLine("Received: " + content);
-
-                _channel.BasicAck(ea.DeliveryTag, false);
-            };
-
-            _channel.BasicConsume("users", false, consumer);
             return Task.CompletedTask;
+        }
+
+        public override void Dispose()
+        {
+            _channel.Close();
+            _connection.Close();
+            base.Dispose();
         }
     }
 }
