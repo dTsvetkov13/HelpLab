@@ -1,4 +1,5 @@
 ﻿using IdentityModel.Client;
+using Microservices.Users.Entities.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace Microservices.Users
             string newEmail
         );
 
-        Task<IdentityUser> Get(string id);
+        Task<User> Get(string id);
         Task<IdentityResult> Delete(string id);
     }
 }

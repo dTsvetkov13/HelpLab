@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
@@ -31,7 +32,12 @@ namespace Microservices.Users
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddHostedService<Receiver>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddHostedService<LoginReceiver>();
+            services.AddHostedService<RegisterReceiver>();
+            services.AddHostedService<GetReceiver>();
+            services.AddHostedService<DeleteReceiver>();
+            services.AddHostedService<UpdateReceiver>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
                         options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -50,6 +56,16 @@ namespace Microservices.Users
                     .AddInMemoryApiResources(Config.GetAPIs())
                     .AddInMemoryClients(Config.GetClients())
                     .AddAspNetIdentity<User>();
+
+            services.AddAuthentication("Bearer")
+            .AddJwtBearer("Bearer", options =>
+            {
+                options.Authority = "https://localhost:44337";
+
+                options.Audience = "Microservices.Users";
+
+                options.TokenValidationParameters.ValidateIssuer = false;
+            });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

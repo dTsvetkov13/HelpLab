@@ -26,4 +26,8 @@
     <Folder Include="Entities\Migrations\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Microservices.Models\Microservices.Models.csproj" />
+  </ItemGroup>
+
 </Project>

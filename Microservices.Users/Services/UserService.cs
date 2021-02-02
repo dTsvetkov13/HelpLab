@@ -15,9 +15,9 @@ namespace Microservices.Users
     public class UserService : IUserService
     {
         private readonly ApplicationDbContext _dbContext;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<User> _userManager;
 
-        public UserService(UserManager<IdentityUser> userManager, ApplicationDbContext dbContext)
+        public UserService(UserManager<User> userManager, ApplicationDbContext dbContext)
         {
             _userManager = userManager;
             _dbContext = dbContext;
@@ -25,23 +25,31 @@ namespace Microservices.Users
 
         public async Task<TokenResponse> Authenticate(string username, string password)
         {
-            TokenResponse result = await new HttpClient().RequestPasswordTokenAsync(new PasswordTokenRequest
+            var httpClientHandler = new HttpClientHandler();
+            httpClientHandler.ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+
+            TokenResponse result = await new HttpClient(httpClientHandler).RequestPasswordTokenAsync(new PasswordTokenRequest
             {
-                Address = "https://localhost:44395/connect/token",
+                //Move this into variable          
+                Address = "https://localhost:44337/connect/token",
 
                 ClientId = "api",
-                Scope = "APIGateway",
+                Scope = "Microservices.Users",
+
+                AuthorizationHeaderStyle = BasicAuthenticationHeaderStyle.Rfc2617,
 
                 UserName = username,
                 Password = password
             });
+            Console.WriteLine("Is error: " + result.IsError + " " + result.Error + " " + result.ErrorDescription);
+            Console.WriteLine("Token: " + result.AccessToken);
 
             return result;
         }
 
         public async Task<IdentityResult> Create(string username, string password, string email)
         {
-            IdentityResult result = await _userManager.CreateAsync(new IdentityUser { UserName = username, Email = email }, password);
+            IdentityResult result = await _userManager.CreateAsync(new User { UserName = username, Email = email }, password);
 
             return result;
         }
@@ -72,7 +80,7 @@ namespace Microservices.Users
             return result;
         }
 
-        public async Task<IdentityUser> Get(string id)
+        public async Task<User> Get(string id)
         {
             User result = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
 
