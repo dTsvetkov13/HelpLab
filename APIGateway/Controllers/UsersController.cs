@@ -1,8 +1,8 @@
-﻿using APIGateway.Services;
+﻿using Microservices.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
@@ -20,37 +20,28 @@ namespace APIGateway.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly IUserService _userService;
-
-        public UsersController(IUserService userService)
+        private IConnection connection;
+        private IModel channel;
+        public UsersController()
         {
-            _userService = userService;
+            var factory = new ConnectionFactory() { HostName = "localhost" };
+
+            connection = factory.CreateConnection();
+            channel = connection.CreateModel();
         }
 
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> Get()
         {
-            var id = User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            var result = await _userService.Get(id);
-            return result != null ? Ok(result) : BadRequest("Invalid input");
-        }
+            //TODO: Change IdentityUser with User
 
-        [HttpPost]
-        public async Task<IActionResult> Register(RegisterInputModel input)
-        {
-            var result = await _userService.Create(input.UserName, input.Password, input.Email);
-            var factory = new ConnectionFactory() { HostName = "localhost" };
+            string id = User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
 
-            IConnection connection;
-            IModel channel;
             string replyQueueName;
             EventingBasicConsumer consumer;
-            BlockingCollection<string> respQueue = new BlockingCollection<string>();
+            BlockingCollection<IdentityUser> respQueue = new BlockingCollection<IdentityUser>();
             IBasicProperties props;
-
-            connection = factory.CreateConnection();
-            channel = connection.CreateModel();
             replyQueueName = channel.QueueDeclare().QueueName;
             consumer = new EventingBasicConsumer(channel);
 
@@ -65,14 +56,14 @@ namespace APIGateway.Controllers
                 var response = Encoding.UTF8.GetString(body);
                 if (ea.BasicProperties.CorrelationId == correlationId)
                 {
-                    respQueue.Add(response);
+                    respQueue.Add(JsonConvert.DeserializeObject<IdentityUser>(response));
                 }
             };
 
-            var messageBytes = Encoding.UTF8.GetBytes("Hello");
+            var messageBytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(id));
             channel.BasicPublish(
                 exchange: "",
-                routingKey: "rpc_queue",
+                routingKey: "users.get",
                 basicProperties: props,
                 body: messageBytes);
 
@@ -81,43 +72,172 @@ namespace APIGateway.Controllers
                 queue: replyQueueName,
                 autoAck: true);
 
+            var result = respQueue.Take();
+
+            return result != null ? Ok(result) : BadRequest("Invalid input");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterInputModel input)
+        {
+            string replyQueueName;
+            EventingBasicConsumer consumer;
+            BlockingCollection<RegisterResponse> respQueue = new BlockingCollection<RegisterResponse>();
+            IBasicProperties props;
+            replyQueueName = channel.QueueDeclare().QueueName;
+            consumer = new EventingBasicConsumer(channel);
+
+            props = channel.CreateBasicProperties();
+            var correlationId = Guid.NewGuid().ToString();
+            props.CorrelationId = correlationId;
+            props.ReplyTo = replyQueueName;
+
+            consumer.Received += (model, ea) =>
+            {
+                var body = ea.Body.ToArray();
+                var response = Encoding.UTF8.GetString(body);
+                if (ea.BasicProperties.CorrelationId == correlationId)
+                {
+                    respQueue.Add(JsonConvert.DeserializeObject<RegisterResponse>(response));
+                }
+            };
+
+            RegisterUser registerUser = new RegisterUser { Username = input.UserName, Email = input.Email, Password = input.Password };
+
+            var messageBytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(registerUser));
+            channel.BasicPublish(
+                exchange: "",
+                routingKey: "users.register",
+                basicProperties: props,
+                body: messageBytes);
+
+            channel.BasicConsume(
+                consumer: consumer,
+                queue: replyQueueName,
+                autoAck: true);
+
+            var result = respQueue.Take();
+
             return result.Succeeded ? Ok(result) : BadRequest(result);
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginInputModel input)
         {
-            var result = await _userService.Authenticate(input.UserName, input.Password);
-            return !result.IsError
-                ? Ok(new
+            string replyQueueName;
+            EventingBasicConsumer consumer;
+            BlockingCollection<LoginResponse> respQueue = new BlockingCollection<LoginResponse>();
+            IBasicProperties props;
+
+            replyQueueName = channel.QueueDeclare().QueueName;
+            consumer = new EventingBasicConsumer(channel);
+
+            props = channel.CreateBasicProperties();
+            var correlationId = Guid.NewGuid().ToString();
+            props.CorrelationId = correlationId;
+            props.ReplyTo = replyQueueName;
+
+            consumer.Received += (model, ea) =>
+            {
+                var body = ea.Body.ToArray();
+                var response = Encoding.UTF8.GetString(body);
+                if (ea.BasicProperties.CorrelationId == correlationId)
+                {
+                    var deserialized = JsonConvert.DeserializeObject<LoginResponse>(response);
+                    respQueue.Add(deserialized);
+                }
+            };
+
+            LoginUser registerUser = new LoginUser { Username = input.UserName, Password = input.Password };
+
+            var messageBytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(registerUser));
+            channel.BasicPublish(
+                exchange: "",
+                routingKey: "users.login",
+                basicProperties: props,
+                body: messageBytes);
+
+            channel.BasicConsume(
+                consumer: consumer,
+                queue: replyQueueName,
+                autoAck: true);
+
+            var result = respQueue.Take();
+
+            if(!result.IsError)
+            {
+                return Ok(new
                 {
                     result.AccessToken,
                     result.ExpiresIn,
                     result.TokenType
-                })
-                : BadRequest(new
+                });
+            }
+            else
+            {
+                return BadRequest(new
                 {
                     result.ErrorDescription,
                     result.Error,
-                    result.ErrorType,
-                    result.HttpErrorReason
                 });
+            }
         }
 
         [HttpPut]
         public async Task<IActionResult> Update(UpdateUserInputModel input)
         {
-            var result = await _userService.Update(input.CurrentUserName,
-                                                   input.NewUserName,
-                                                   input.CurrentPassword,
-                                                   input.CurrentPassword,
-                                                   input.CurrentEmail,
-                                                   input.NewEmail);
+            string replyQueueName;
+            EventingBasicConsumer consumer;
+            BlockingCollection<List<UpdateResponse>> respQueue = new BlockingCollection<List<UpdateResponse>>();
+            IBasicProperties props;
+
+            replyQueueName = channel.QueueDeclare().QueueName;
+            consumer = new EventingBasicConsumer(channel);
+
+            props = channel.CreateBasicProperties();
+            var correlationId = Guid.NewGuid().ToString();
+            props.CorrelationId = correlationId;
+            props.ReplyTo = replyQueueName;
+
+            consumer.Received += (model, ea) =>
+            {
+                var body = ea.Body.ToArray();
+                var response = Encoding.UTF8.GetString(body);
+                if (ea.BasicProperties.CorrelationId == correlationId)
+                {
+                    var deserialized = JsonConvert.DeserializeObject<List<UpdateResponse>>(response);
+                    respQueue.Add(deserialized);
+                }
+            };
+
+            UpdateUser updateUser = new UpdateUser
+            {
+                CurrentEmail = input.CurrentEmail,
+                CurrentPassword = input.CurrentPassword,
+                CurrentUserName = input.CurrentUserName,
+                NewEmail = input.NewEmail,
+                NewPassword = input.NewPassword,
+                NewUserName = input.NewUserName
+            };
+
+            var messageBytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(updateUser));
+            channel.BasicPublish(
+                exchange: "",
+                routingKey: "users.update",
+                basicProperties: props,
+                body: messageBytes);
+
+            channel.BasicConsume(
+                consumer: consumer,
+                queue: replyQueueName,
+                autoAck: true);
+
+            var result = respQueue.Take();
 
             foreach (var identityResult in result)
                 if (!identityResult.Succeeded)
                     return BadRequest(result);
-
+            
             return Ok(result);
         }
 
@@ -125,8 +245,44 @@ namespace APIGateway.Controllers
         [Authorize]
         public async Task<IActionResult> Delete()
         {
-            var id = User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            var result = await _userService.Delete(id);
+            string id = User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
+
+            string replyQueueName;
+            EventingBasicConsumer consumer;
+            BlockingCollection<DeleteResponse> respQueue = new BlockingCollection<DeleteResponse>();
+            IBasicProperties props;
+            replyQueueName = channel.QueueDeclare().QueueName;
+            consumer = new EventingBasicConsumer(channel);
+
+            props = channel.CreateBasicProperties();
+            var correlationId = Guid.NewGuid().ToString();
+            props.CorrelationId = correlationId;
+            props.ReplyTo = replyQueueName;
+
+            consumer.Received += (model, ea) =>
+            {
+                var body = ea.Body.ToArray();
+                var response = Encoding.UTF8.GetString(body);
+                if (ea.BasicProperties.CorrelationId == correlationId)
+                {
+                    respQueue.Add(JsonConvert.DeserializeObject<DeleteResponse>(response));
+                }
+            };
+
+            var messageBytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(id));
+            channel.BasicPublish(
+                exchange: "",
+                routingKey: "users.delete",
+                basicProperties: props,
+                body: messageBytes);
+
+            channel.BasicConsume(
+                consumer: consumer,
+                queue: replyQueueName,
+                autoAck: true);
+
+            var result = respQueue.Take();
+
             return result.Succeeded ? Ok(result) : BadRequest(result);
         }
     }
