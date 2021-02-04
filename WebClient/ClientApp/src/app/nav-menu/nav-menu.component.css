@@ -1,18 +1,30 @@
-a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+.navbar {
+  background-color: #262626;
 }
 
-html {
-  font-size: 14px;
-}
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+.navbar-item {
+  width: 33.33%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+.navbar-menu {
+  display: flex;
+}
+
+.navbar-menu-item {
+  margin: 1rem;
+}
+
+.navbar-item:first-child {
+  justify-content: flex-start;
+}
+
+.navbar-item:last-child {
+  justify-content: flex-end;
+}
+
+.search {
+  width: 100%;
 }
