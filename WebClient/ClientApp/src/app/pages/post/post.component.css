@@ -1,0 +1,54 @@
+.page {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.left-side {
+    width: 25%;
+    height: 200px;
+}
+
+.right-side {
+    width: 75%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    border-left: 1px solid #262626;
+}
+
+.post-data {
+    width: 66.66%;
+    height: 100%;
+}
+
+.author-data {
+    width: 33.33%;
+    height: 100%;
+    background-color: green;
+}
+
+.post-data-question {
+    width: 100%;
+}
+
+.post-data-description {
+    width: 100%;
+    height: min-content;
+}
+
+.border-bottom {
+    width: 70%;
+    border-bottom: 2px dashed black;
+}
+
+.post-end-border-bottom {
+    width: 80%;
+    border-bottom: 2px dashed black;
+}
+
+.post-data > * {
+    margin-left: 20px;
+}
