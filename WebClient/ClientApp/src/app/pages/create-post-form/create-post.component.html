@@ -1,2 +1,23 @@
-<p>create-post works!</p>
-
+<div class="post-form-div">
+    <div class="content-div">
+        <form (ngSubmit)="onSubmit()" #postForm="ngForm">
+            <h4 class="form-title">Create your post:</h4>
+            <div class="form-group">
+                <input type="text" class="form-control" id="question"
+                        required
+                        [(ngModel)]="model.question" name="question"
+                        #name="ngModel">
+            </div>
+        
+            <div class="form-group">
+                <textarea type="text" class="form-control" id="description"
+                        required
+                        [(ngModel)]="model.description" name="description"
+                        #name="ngModel" rows=16></textarea>
+            </div>
+            <div class="create-button-div">
+                <button type="submit" class="btn btn-success" [disabled]="!postForm.form.valid">Create</button>
+            </div>
+        </form>
+    </div>
+</div>
