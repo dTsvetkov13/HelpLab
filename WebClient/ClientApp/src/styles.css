@@ -1,6 +1,18 @@
-/* You can add global styles to this file, and also import other style files */
+@font-face {
+  font-family: "Regular";
+  src: url("./assets/fonts/Raleway/static/Raleway-Regular.ttf");
+}
 
-/* Provide sufficient contrast against white background */
+@font-face {
+  font-family: "Bold";
+  src: url("./assets/fonts/Raleway/static/Raleway-Bold.ttf");
+}
+
+@font-face {
+  font-family: "Medium";
+  src: url("./assets/fonts/Raleway/static/Raleway-SemiBold.ttf");
+}
+
 a {
   color: #0366d6;
 }
@@ -13,4 +25,13 @@ code {
   color: #fff;
   background-color: #1b6ec2;
   border-color: #1861ac;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+:root {
+  --regular-font-family: "Regular", sans-serif;
+  --bold-font-family: "Bold", sans-serif;
+  --medium-font-family: "Medium", sans-serif;
 }
