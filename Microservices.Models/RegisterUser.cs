@@ -6,7 +6,9 @@ namespace Microservices.Models
 {
     public class RegisterUser
     {
-        public string Username;
+        public string Name;
+
+        public string Surname;
 
         public string Email;
 
