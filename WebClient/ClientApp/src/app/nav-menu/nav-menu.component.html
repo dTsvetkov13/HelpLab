@@ -1,12 +1,30 @@
 <div class="navbar">
-  <p class="navbar-item">Logo</p>
+  <div class="navbar-item logo-div" (click)="redirectToHome()">
+
+  </div>
 
   <div class="navbar-item">
       <input #searchEl class="search" type="text" placeholder="Search" (keyup.enter)="search(searchEl.value)">
+      <button class="show-categories-button"(click)="showCategories()">Categories</button>
   </div>
   
   <div class="navbar-item navbar-menu">
-      <button (click)="redirectToProfile()" class="navbar-menu-item">Profile</button>
-      <p class="navbar-menu-item">BurgerMenu</p>
+    <button *ngIf="!hasAccessToken()" md-button md-raised md-cornered class="login-button" (click)="redirectToLogin()">Log In</button>
+    <button *ngIf="!hasAccessToken()" md-button md-raised md-cornered class="sign-up-button" (click)="redirectToSignUp()">Sign Up</button>
+    <button *ngIf="hasAccessToken()" (click)="showAccessToken()">Profile</button>
+  </div>
+</div>
+
+<div *ngIf="showCategoriesStatement" class="show-categories-div">
+  <div class="categories-div">
+    <div class="categories-left-side">
+      <input class="category-input" [(ngModel)]="searchObject.subject" placeholder="Subject" type="text">
+      <input class="category-input" placeholder="Class" type="text">
+      <input class="category-input" placeholder="Exercise" type="text">
+    </div>
+    <div class="categories-right-side">
+      <input class="category-input" placeholder="Publisher" type="text">
+      <input class="category-input" placeholder="Page" type="text">
+    </div>
   </div>
 </div>
