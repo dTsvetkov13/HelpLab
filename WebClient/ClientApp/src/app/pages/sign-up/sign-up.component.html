@@ -1,0 +1,17 @@
+<div class="center-content">
+  <div class="modal-box">
+    <p class="modal-box-title">Sign up</p>
+    <div class="alert alert-danger" role="alert" *ngIf="errors.length > 0">
+      <ul>
+        <li *ngFor="let error of errors">
+          {{ error }}
+        </li>
+      </ul>
+    </div>
+    <input class="modal-box-input" #name optional type="text" placeholder="Name">
+    <input class="modal-box-input" #surname optional type="text" placeholder="Surname">
+    <input class="modal-box-input" #email required type="text" placeholder="Email">
+    <input class="modal-box-input" #password required type="password" placeholder="Password">
+    <button class="modal-box-button" (click)="signUp(name.value, surname.value, email.value, password.value)">Sign up</button>
+  </div>
+</div>
