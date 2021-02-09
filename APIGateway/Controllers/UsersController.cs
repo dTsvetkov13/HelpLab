@@ -102,7 +102,8 @@ namespace APIGateway.Controllers
                 }
             };
 
-            RegisterUser registerUser = new RegisterUser { Username = input.UserName, Email = input.Email, Password = input.Password };
+            RegisterUser registerUser = new RegisterUser { Name = input.Name, Surname = input.Surname,
+                                                           Email = input.Email, Password = input.Password };
 
             var messageBytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(registerUser));
             channel.BasicPublish(
@@ -120,6 +121,9 @@ namespace APIGateway.Controllers
 
             return result.Succeeded ? Ok(result) : BadRequest(result);
         }
+
+        //Denis1
+        //Uw9e?123
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginInputModel input)
@@ -175,12 +179,32 @@ namespace APIGateway.Controllers
             }
             else
             {
-                return BadRequest(new
+                var errors = new Dictionary<string, string[]>();
+
+                if (result.ErrorDescription != null)
                 {
-                    result.ErrorDescription,
-                    result.Error,
-                });
-            }
+                    errors["ErrDesc"] = new string[] { result.ErrorDescription };
+                }
+                else
+                {
+                    errors["Error"] = new string[] { result.Error };
+                }
+
+                return BadRequest(new { errors });
+
+                    /*if (result.ErrorDescription != null)
+                    {
+                        return BadRequest(new
+                        {
+                            result.ErrorDescription,
+                        });
+                    }
+
+                    return BadRequest(new
+                    {
+                        result.Error,
+                    });*/
+                }
         }
 
         [HttpPut]
