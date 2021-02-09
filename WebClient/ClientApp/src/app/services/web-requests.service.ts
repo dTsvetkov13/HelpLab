@@ -9,7 +9,7 @@ export class WebRequestsService {
   readonly ROOT_URL;
 
   constructor(private http: HttpClient) {
-    this.ROOT_URL = "https://localhost:44325";
+    this.ROOT_URL = "https://localhost:44395";
   }
 
   get(url: string) {
@@ -18,6 +18,6 @@ export class WebRequestsService {
   
   //Authorized post
   post(url: string, payload: object) {
-    return this.http.post(`${this.ROOT_URL}/${url}`, payload, { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('access_token')}, observe: 'response', responseType: 'text' });
+    return this.http.post(`${this.ROOT_URL}/${url}`, payload, { headers: {"Content-Type": "application/json"}, observe: 'response', responseType: 'text' });
   }
 }
