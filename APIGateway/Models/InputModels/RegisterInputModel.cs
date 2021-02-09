@@ -5,14 +5,16 @@ namespace WebMonitoringApi.InputModels
     public class RegisterInputModel
     {
         [MaxLength(100)]
-        [Required]
-        public string UserName { get; set; }
+        public string Name { get; set; }
 
-        [Required]
+        [MaxLength(100)]
+        public string Surname { get; set; }
+
+        [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
 
         [EmailAddress]
-        [Required]
+        [Required(ErrorMessage = "Email is required")]
         public string Email { get; set; }
     }
 }
