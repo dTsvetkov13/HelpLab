@@ -28,6 +28,15 @@ namespace APIGateway
 
             IdentityModelEventSource.ShowPII = true;
 
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    //builder.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost");
+                    builder.WithOrigins("https://localhost:44341", "example.com").AllowAnyHeader().AllowAnyMethod();
+                });
+            });
+
             services.AddAuthentication("Bearer")
                     .AddJwtBearer("Bearer",
                                   options =>
@@ -69,6 +78,8 @@ namespace APIGateway
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors();
 
             app.UseAuthorization();
 
