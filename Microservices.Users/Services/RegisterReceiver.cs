@@ -50,7 +50,7 @@ namespace Microservices.Users.Services
                     {
                         var service = scope.ServiceProvider.GetService<IUserService>();
 
-                        result = await service.Create(input.Username, input.Password, input.Email);
+                        result = await service.Create(input.Email, input.Password, input.Name, input.Surname);
                     }
                 }
                 catch (Exception e)

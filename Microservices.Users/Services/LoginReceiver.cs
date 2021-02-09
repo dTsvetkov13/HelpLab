@@ -43,6 +43,8 @@ namespace Microservices.Users.Services
                 var replyProps = _channel.CreateBasicProperties();
                 replyProps.CorrelationId = props.CorrelationId;
 
+                LoginResponse loginResponse;
+
                 try
                 {
                     using (var scope = _serviceProvider.CreateScope())
@@ -50,14 +52,9 @@ namespace Microservices.Users.Services
                         var service = scope.ServiceProvider.GetService<IUserService>();
                         result = await service.Authenticate(input.Username, input.Password);
                     }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(" [.] " + e.Message);
-                }
-                finally
-                {
-                    LoginResponse loginResponse = new LoginResponse { 
+
+                    loginResponse = new LoginResponse
+                    {
                         AccessToken = result.AccessToken,
                         Error = result.Error,
                         ErrorDescription = result.ErrorDescription,
@@ -69,18 +66,27 @@ namespace Microservices.Users.Services
                         IssuedTokenType = result.IssuedTokenType,
                         RefreshToken = result.RefreshToken
                     };
-
-                    var responseBytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(loginResponse));
-
-                    var deserialized = JsonConvert.DeserializeObject<LoginResponse>(Encoding.UTF8.GetString(responseBytes));
-
-                    Console.WriteLine("Is error: " + deserialized.IsError + " " + deserialized.Error + " " + deserialized.ErrorDescription);
-                    Console.WriteLine("Token: " + deserialized.AccessToken);
-
-                    _channel.BasicPublish(exchange: "", routingKey: props.ReplyTo,
-                          basicProperties: replyProps, body: responseBytes);
-                    _channel.BasicAck(ea.DeliveryTag, false);
                 }
+                catch (Exception e)
+                {
+                    Console.WriteLine(" [.] " + e.Message);
+                    loginResponse = new LoginResponse
+                    {
+                        Error = e.Message,
+                        IsError = true,
+                    };
+                }
+
+                var responseBytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(loginResponse));
+
+                var deserialized = JsonConvert.DeserializeObject<LoginResponse>(Encoding.UTF8.GetString(responseBytes));
+
+                Console.WriteLine("Is error: " + deserialized.IsError + " " + deserialized.Error + " " + deserialized.ErrorDescription);
+                Console.WriteLine("Token: " + deserialized.AccessToken);
+
+                _channel.BasicPublish(exchange: "", routingKey: props.ReplyTo,
+                      basicProperties: replyProps, body: responseBytes);
+                _channel.BasicAck(ea.DeliveryTag, false);
             };
 
             _channel.BasicConsume(QueueName, false, consumer);

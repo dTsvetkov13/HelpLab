@@ -11,7 +11,7 @@ namespace Microservices.Users
     public interface IUserService
     {
         Task<TokenResponse> Authenticate(string username, string password);
-        Task<IdentityResult> Create(string username, string password, string email);
+        Task<IdentityResult> Create(string email, string password, string name, string surname);
 
         Task<IEnumerable<IdentityResult>> Update(
             string currentUserName,

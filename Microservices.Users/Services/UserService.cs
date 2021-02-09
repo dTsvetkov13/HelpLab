@@ -47,9 +47,10 @@ namespace Microservices.Users
             return result;
         }
 
-        public async Task<IdentityResult> Create(string username, string password, string email)
+        public async Task<IdentityResult> Create(string email, string password, string name, string surname)
         {
-            IdentityResult result = await _userManager.CreateAsync(new User { UserName = username, Email = email }, password);
+            IdentityResult result = await _userManager.CreateAsync(new User { Name = name, Surname = surname, 
+                                                                   UserName = email, Email = email }, password);
 
             return result;
         }
