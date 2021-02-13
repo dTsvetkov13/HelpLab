@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Logging;
+using APIGateway.Services;
 
 namespace APIGateway
 {
@@ -27,6 +28,8 @@ namespace APIGateway
             services.AddOptions();
 
             IdentityModelEventSource.ShowPII = true;
+
+            services.AddSingleton<RabbitMqService>();
 
             services.AddCors(options =>
             {

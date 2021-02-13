@@ -19,7 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microservices.Ratings", "Mi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microservices.Posts", "Microservices.Posts\Microservices.Posts.csproj", "{B4409D9D-26BF-45D8-B1C6-D182C61C4542}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservices.Users", "Microservices.Users\Microservices.Users.csproj", "{728CBB30-B49F-4B92-BCB7-86F76DBFE1A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microservices.Users", "Microservices.Users\Microservices.Users.csproj", "{728CBB30-B49F-4B92-BCB7-86F76DBFE1A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservices.Interfaces", "Microservices.Interfaces\Microservices.Interfaces.csproj", "{4DC15EDC-CE09-41C4-87FB-DF5B38C05D93}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +65,10 @@ Global
 		{728CBB30-B49F-4B92-BCB7-86F76DBFE1A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{728CBB30-B49F-4B92-BCB7-86F76DBFE1A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{728CBB30-B49F-4B92-BCB7-86F76DBFE1A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DC15EDC-CE09-41C4-87FB-DF5B38C05D93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DC15EDC-CE09-41C4-87FB-DF5B38C05D93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DC15EDC-CE09-41C4-87FB-DF5B38C05D93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DC15EDC-CE09-41C4-87FB-DF5B38C05D93}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

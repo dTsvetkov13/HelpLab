@@ -1,4 +1,5 @@
-﻿using Microservices.Models;
+﻿using APIGateway.Services;
+using Microservices.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -20,14 +21,10 @@ namespace APIGateway.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private IConnection connection;
-        private IModel channel;
-        public UsersController()
+        private readonly RabbitMqService _rabbitMqService;
+        public UsersController(RabbitMqService rabbitMqService)
         {
-            var factory = new ConnectionFactory() { HostName = "localhost" };
-
-            connection = factory.CreateConnection();
-            channel = connection.CreateModel();
+            _rabbitMqService = rabbitMqService;
         }
 
         [HttpGet]
@@ -38,41 +35,7 @@ namespace APIGateway.Controllers
 
             string id = User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
 
-            string replyQueueName;
-            EventingBasicConsumer consumer;
-            BlockingCollection<IdentityUser> respQueue = new BlockingCollection<IdentityUser>();
-            IBasicProperties props;
-            replyQueueName = channel.QueueDeclare().QueueName;
-            consumer = new EventingBasicConsumer(channel);
-
-            props = channel.CreateBasicProperties();
-            var correlationId = Guid.NewGuid().ToString();
-            props.CorrelationId = correlationId;
-            props.ReplyTo = replyQueueName;
-
-            consumer.Received += (model, ea) =>
-            {
-                var body = ea.Body.ToArray();
-                var response = Encoding.UTF8.GetString(body);
-                if (ea.BasicProperties.CorrelationId == correlationId)
-                {
-                    respQueue.Add(JsonConvert.DeserializeObject<IdentityUser>(response));
-                }
-            };
-
-            var messageBytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(id));
-            channel.BasicPublish(
-                exchange: "",
-                routingKey: "users.get",
-                basicProperties: props,
-                body: messageBytes);
-
-            channel.BasicConsume(
-                consumer: consumer,
-                queue: replyQueueName,
-                autoAck: true);
-
-            var result = respQueue.Take();
+            var result = _rabbitMqService.SendWithResult<IdentityUser, string>(id, "users.get");
 
             return result != null ? Ok(result) : BadRequest("Invalid input");
         }
@@ -80,44 +43,15 @@ namespace APIGateway.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterInputModel input)
         {
-            string replyQueueName;
-            EventingBasicConsumer consumer;
-            BlockingCollection<RegisterResponse> respQueue = new BlockingCollection<RegisterResponse>();
-            IBasicProperties props;
-            replyQueueName = channel.QueueDeclare().QueueName;
-            consumer = new EventingBasicConsumer(channel);
-
-            props = channel.CreateBasicProperties();
-            var correlationId = Guid.NewGuid().ToString();
-            props.CorrelationId = correlationId;
-            props.ReplyTo = replyQueueName;
-
-            consumer.Received += (model, ea) =>
+            RegisterUser registerUser = new RegisterUser
             {
-                var body = ea.Body.ToArray();
-                var response = Encoding.UTF8.GetString(body);
-                if (ea.BasicProperties.CorrelationId == correlationId)
-                {
-                    respQueue.Add(JsonConvert.DeserializeObject<RegisterResponse>(response));
-                }
+                Name = input.Name,
+                Surname = input.Surname,
+                Email = input.Email,
+                Password = input.Password
             };
 
-            RegisterUser registerUser = new RegisterUser { Name = input.Name, Surname = input.Surname,
-                                                           Email = input.Email, Password = input.Password };
-
-            var messageBytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(registerUser));
-            channel.BasicPublish(
-                exchange: "",
-                routingKey: "users.register",
-                basicProperties: props,
-                body: messageBytes);
-
-            channel.BasicConsume(
-                consumer: consumer,
-                queue: replyQueueName,
-                autoAck: true);
-
-            var result = respQueue.Take();
+            RegisterResponse result = _rabbitMqService.SendWithResult<RegisterResponse, RegisterUser>(registerUser, "users.register");
 
             return result.Succeeded ? Ok(result) : BadRequest(result);
         }
@@ -128,47 +62,11 @@ namespace APIGateway.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginInputModel input)
         {
-            string replyQueueName;
-            EventingBasicConsumer consumer;
-            BlockingCollection<LoginResponse> respQueue = new BlockingCollection<LoginResponse>();
-            IBasicProperties props;
+            LoginUser loginUser = new LoginUser { Username = input.UserName, Password = input.Password };
 
-            replyQueueName = channel.QueueDeclare().QueueName;
-            consumer = new EventingBasicConsumer(channel);
+            LoginResponse result = _rabbitMqService.SendWithResult<LoginResponse, LoginUser>(loginUser, "users.login");
 
-            props = channel.CreateBasicProperties();
-            var correlationId = Guid.NewGuid().ToString();
-            props.CorrelationId = correlationId;
-            props.ReplyTo = replyQueueName;
-
-            consumer.Received += (model, ea) =>
-            {
-                var body = ea.Body.ToArray();
-                var response = Encoding.UTF8.GetString(body);
-                if (ea.BasicProperties.CorrelationId == correlationId)
-                {
-                    var deserialized = JsonConvert.DeserializeObject<LoginResponse>(response);
-                    respQueue.Add(deserialized);
-                }
-            };
-
-            LoginUser registerUser = new LoginUser { Username = input.UserName, Password = input.Password };
-
-            var messageBytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(registerUser));
-            channel.BasicPublish(
-                exchange: "",
-                routingKey: "users.login",
-                basicProperties: props,
-                body: messageBytes);
-
-            channel.BasicConsume(
-                consumer: consumer,
-                queue: replyQueueName,
-                autoAck: true);
-
-            var result = respQueue.Take();
-
-            if(!result.IsError)
+            if (!result.IsError)
             {
                 return Ok(new
                 {
@@ -191,49 +89,12 @@ namespace APIGateway.Controllers
                 }
 
                 return BadRequest(new { errors });
-
-                    /*if (result.ErrorDescription != null)
-                    {
-                        return BadRequest(new
-                        {
-                            result.ErrorDescription,
-                        });
-                    }
-
-                    return BadRequest(new
-                    {
-                        result.Error,
-                    });*/
-                }
+            }
         }
 
         [HttpPut]
         public async Task<IActionResult> Update(UpdateUserInputModel input)
         {
-            string replyQueueName;
-            EventingBasicConsumer consumer;
-            BlockingCollection<List<UpdateResponse>> respQueue = new BlockingCollection<List<UpdateResponse>>();
-            IBasicProperties props;
-
-            replyQueueName = channel.QueueDeclare().QueueName;
-            consumer = new EventingBasicConsumer(channel);
-
-            props = channel.CreateBasicProperties();
-            var correlationId = Guid.NewGuid().ToString();
-            props.CorrelationId = correlationId;
-            props.ReplyTo = replyQueueName;
-
-            consumer.Received += (model, ea) =>
-            {
-                var body = ea.Body.ToArray();
-                var response = Encoding.UTF8.GetString(body);
-                if (ea.BasicProperties.CorrelationId == correlationId)
-                {
-                    var deserialized = JsonConvert.DeserializeObject<List<UpdateResponse>>(response);
-                    respQueue.Add(deserialized);
-                }
-            };
-
             UpdateUser updateUser = new UpdateUser
             {
                 CurrentEmail = input.CurrentEmail,
@@ -244,19 +105,7 @@ namespace APIGateway.Controllers
                 NewUserName = input.NewUserName
             };
 
-            var messageBytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(updateUser));
-            channel.BasicPublish(
-                exchange: "",
-                routingKey: "users.update",
-                basicProperties: props,
-                body: messageBytes);
-
-            channel.BasicConsume(
-                consumer: consumer,
-                queue: replyQueueName,
-                autoAck: true);
-
-            var result = respQueue.Take();
+            var result = _rabbitMqService.SendWithResult<List<UpdateResponse>, UpdateUser>(updateUser, "users.update");
 
             foreach (var identityResult in result)
                 if (!identityResult.Succeeded)
@@ -271,41 +120,7 @@ namespace APIGateway.Controllers
         {
             string id = User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
 
-            string replyQueueName;
-            EventingBasicConsumer consumer;
-            BlockingCollection<DeleteResponse> respQueue = new BlockingCollection<DeleteResponse>();
-            IBasicProperties props;
-            replyQueueName = channel.QueueDeclare().QueueName;
-            consumer = new EventingBasicConsumer(channel);
-
-            props = channel.CreateBasicProperties();
-            var correlationId = Guid.NewGuid().ToString();
-            props.CorrelationId = correlationId;
-            props.ReplyTo = replyQueueName;
-
-            consumer.Received += (model, ea) =>
-            {
-                var body = ea.Body.ToArray();
-                var response = Encoding.UTF8.GetString(body);
-                if (ea.BasicProperties.CorrelationId == correlationId)
-                {
-                    respQueue.Add(JsonConvert.DeserializeObject<DeleteResponse>(response));
-                }
-            };
-
-            var messageBytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(id));
-            channel.BasicPublish(
-                exchange: "",
-                routingKey: "users.delete",
-                basicProperties: props,
-                body: messageBytes);
-
-            channel.BasicConsume(
-                consumer: consumer,
-                queue: replyQueueName,
-                autoAck: true);
-
-            var result = respQueue.Take();
+            var result = _rabbitMqService.SendWithResult<DeleteResponse, string>(id, "users.delete");
 
             return result.Succeeded ? Ok(result) : BadRequest(result);
         }
