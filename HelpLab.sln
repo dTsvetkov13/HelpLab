@@ -9,15 +9,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIGateway", "APIGateway\AP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microservices.Models", "Microservices.Models\Microservices.Models.csproj", "{5DA541FD-A865-477C-9425-1537C68B0D93}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microservices.Answers", "Microservices.Answers\Microservices.Answers.csproj", "{F088EC5B-A93E-4AAC-B945-67BE4335B84C}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microservices.Ratings", "Microservices.Ratings\Microservices.Ratings.csproj", "{2917C788-86A0-4D68-BA7A-303189061BBD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microservices.Users", "Microservices.Users\Microservices.Users.csproj", "{728CBB30-B49F-4B92-BCB7-86F76DBFE1A2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microservices.Interfaces", "Microservices.Interfaces\Microservices.Interfaces.csproj", "{4DC15EDC-CE09-41C4-87FB-DF5B38C05D93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservices.Posts", "Microservices.Posts\Microservices.Posts.csproj", "{36DB0F7C-73A2-4FFD-8DDE-A4E75300E1D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microservices.Posts", "Microservices.Posts\Microservices.Posts.csproj", "{36DB0F7C-73A2-4FFD-8DDE-A4E75300E1D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservices.Answers", "Microservices.Answers\Microservices.Answers.csproj", "{FDBBA393-3007-4B53-A2A3-44F140906E37}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,10 +37,6 @@ Global
 		{5DA541FD-A865-477C-9425-1537C68B0D93}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5DA541FD-A865-477C-9425-1537C68B0D93}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5DA541FD-A865-477C-9425-1537C68B0D93}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F088EC5B-A93E-4AAC-B945-67BE4335B84C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F088EC5B-A93E-4AAC-B945-67BE4335B84C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F088EC5B-A93E-4AAC-B945-67BE4335B84C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F088EC5B-A93E-4AAC-B945-67BE4335B84C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2917C788-86A0-4D68-BA7A-303189061BBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2917C788-86A0-4D68-BA7A-303189061BBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2917C788-86A0-4D68-BA7A-303189061BBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -57,6 +53,10 @@ Global
 		{36DB0F7C-73A2-4FFD-8DDE-A4E75300E1D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36DB0F7C-73A2-4FFD-8DDE-A4E75300E1D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36DB0F7C-73A2-4FFD-8DDE-A4E75300E1D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDBBA393-3007-4B53-A2A3-44F140906E37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDBBA393-3007-4B53-A2A3-44F140906E37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDBBA393-3007-4B53-A2A3-44F140906E37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDBBA393-3007-4B53-A2A3-44F140906E37}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
