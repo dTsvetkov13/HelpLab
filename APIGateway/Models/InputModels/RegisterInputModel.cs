@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebMonitoringApi.InputModels
+namespace APIGateway.Models.InputModels
 {
     public class RegisterInputModel
     {

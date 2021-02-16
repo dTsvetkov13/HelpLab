@@ -1,4 +1,5 @@
-﻿using APIGateway.Services;
+﻿using APIGateway.Models.InputModels;
+using APIGateway.Services;
 using Microservices.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -13,7 +14,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using WebMonitoringApi.InputModels;
 
 namespace APIGateway.Controllers
 {
