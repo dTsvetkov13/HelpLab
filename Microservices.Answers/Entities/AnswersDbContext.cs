@@ -1,13 +1,13 @@
-﻿using Microservices.Answers.Data.Models;
+﻿using Microservices.Answers.Entities.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Microservices.Answers.Data
+namespace Microservices.Answers.Entities
 {
-    class AnswersDbContext : DbContext
+    public class AnswersDbContext : DbContext
     {
         public AnswersDbContext(DbContextOptions<AnswersDbContext> options) : base(options)
         {

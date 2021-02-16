@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace Microservices.Answers.Data.Models
+namespace Microservices.Answers.Entities.Models
 {
-    class Answer
+    public class Answer
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
