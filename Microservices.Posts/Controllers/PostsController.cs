@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microservices.Posts.Models.InputModels;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Microservices.Posts.Controllers
 {
@@ -13,7 +14,7 @@ namespace Microservices.Posts.Controllers
         }
 
         [HttpPost]
-        public void Create()
+        public void Create(CreateInputModel input)
         {
 
         }
