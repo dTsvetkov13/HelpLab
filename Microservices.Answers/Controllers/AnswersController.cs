@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microservices.Answers.Models.InputModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace Microservices.Answers.Controllers
         }
 
         [HttpPut]
-        public void Update()
+        public void Update(UpdateInputModel input)
         {
 
         }
