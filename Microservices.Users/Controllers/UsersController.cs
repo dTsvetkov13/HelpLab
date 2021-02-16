@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Microservices.Users.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/microservices/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
     {

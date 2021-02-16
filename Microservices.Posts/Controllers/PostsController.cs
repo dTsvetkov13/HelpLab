@@ -2,7 +2,7 @@
 
 namespace Microservices.Posts.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/microservices/[controller]")]
     [ApiController]
     public class PostsController : ControllerBase
     {
