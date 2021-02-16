@@ -1,16 +1,16 @@
-﻿using Microservices.Posts.Data.Models;
+﻿using Microservices.Posts.Entities.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Microservices.Posts.Data
+namespace Microservices.Posts.Entities
 {
-    class PostsDbContext : DbContext
+    public class PostsDbContext : DbContext
     {
-        public PostsDbContext(DbContextOptions<PostsDbContext> options) : base(options)
+        public PostsDbContext(DbContextOptions options) : base(options)
         {
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

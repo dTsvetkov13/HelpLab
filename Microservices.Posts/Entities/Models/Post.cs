@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
-namespace Microservices.Posts.Data.Models
+namespace Microservices.Posts.Entities.Models
 {
-    class Post
+    public class Post
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -24,5 +24,7 @@ namespace Microservices.Posts.Data.Models
         public DateTime LastEditedAt { get; set; }
 
         public string AuthorId { get; set; }
+
+        public int AnswersCount { get; set; }
     }
 }
