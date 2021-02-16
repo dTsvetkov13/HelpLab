@@ -1,5 +1,8 @@
-﻿using Microservices.Interfaces;
+﻿using EasyNetQ;
+using Microservices.Interfaces;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Microservices.Messenger
 {
@@ -7,12 +10,20 @@ namespace Microservices.Messenger
     {
         public void Publish<T>(T message, string route)
         {
-            throw new NotImplementedException();
+            using(var bus = RabbitHutch.CreateBus("host=localhost"))
+            {
+                //TODO: decide whether to await this
+                bus.PubSub.PublishAsync(message, route);
+            }
         }
 
-        public void Subscribe()
+        public void Subscribe<ReturnType>(string id, Action<ReturnType> handle)
         {
-            throw new NotImplementedException();
+            using (var bus = RabbitHutch.CreateBus("host=localhost"))
+            {
+                //TODO: decide whether to await this
+                bus.PubSub.SubscribeAsync<ReturnType>(id, handle);
+            }
         }
     }
 }
