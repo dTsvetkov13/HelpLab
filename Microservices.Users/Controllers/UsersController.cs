@@ -1,9 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microservices.Users.Models.InputModels;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Microservices.Users.Controllers
 {
@@ -18,13 +14,19 @@ namespace Microservices.Users.Controllers
         }
 
         [HttpPost]
-        public void Create()
+        public void Create(RegisterInputModel input)
+        {
+
+        }
+
+        [HttpPost("login")]
+        public void Login(LoginInputModel input)
         {
 
         }
 
         [HttpPut]
-        public void Update()
+        public void Update(UpdateUserInputModel input)
         {
 
         }
