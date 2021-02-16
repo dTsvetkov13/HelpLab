@@ -20,7 +20,7 @@ namespace Microservices.Posts.Controllers
         }
 
         [HttpPut]
-        public void Update()
+        public void Update(UpdateInputModel input)
         {
 
         }
