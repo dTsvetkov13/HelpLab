@@ -18,7 +18,7 @@ namespace Microservices.Answers.Controllers
         }
 
         [HttpPost]
-        public void Create()
+        public void Create(CreateInputModel input)
         {
 
         }
