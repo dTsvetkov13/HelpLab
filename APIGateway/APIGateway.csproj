@@ -27,4 +27,8 @@
     <ProjectReference Include="..\Microservices.Models\Microservices.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
 </Project>
