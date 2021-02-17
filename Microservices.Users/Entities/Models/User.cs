@@ -15,5 +15,9 @@ namespace Microservices.Users.Entities.Models
         public string Name { set; get; }
 
         public string Surname { set; get; }
+
+        public int PostsCount { get; set; }
+
+        public int AnswersCount { get; set; }
     }
 }
