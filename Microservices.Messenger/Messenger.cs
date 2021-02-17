@@ -19,10 +19,15 @@ namespace Microservices.Messenger
 
         public void Subscribe<ReturnType>(string id, Action<ReturnType> handle)
         {
+            Subscribe(id, handle, null);
+        }
+
+        public void Subscribe<ReturnType>(string id, Action<ReturnType> handle, Action<ISubscriptionConfiguration> action)
+        {
             using (var bus = RabbitHutch.CreateBus("host=localhost"))
             {
                 //TODO: decide whether to await this
-                bus.PubSub.SubscribeAsync<ReturnType>(id, handle);
+                bus.PubSub.SubscribeAsync<ReturnType>(id, handle, action);
             }
         }
     }
