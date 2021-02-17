@@ -1,4 +1,5 @@
 using Microservices.Posts.Entities;
+using Microservices.Posts.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -30,6 +31,8 @@ namespace Microservices.Posts
         {
             services.AddDbContext<PostsDbContext>(options =>
                         options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddScoped<PostService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
