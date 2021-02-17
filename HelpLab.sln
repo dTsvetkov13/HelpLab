@@ -19,6 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microservices.Posts", "Micr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservices.Answers", "Microservices.Answers\Microservices.Answers.csproj", "{FDBBA393-3007-4B53-A2A3-44F140906E37}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microservices.Messenger", "Microservices.Messenger\Microservices.Messenger.csproj", "{5098CBEB-2DAE-453A-B3FD-DB65C8218B7E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,10 @@ Global
 		{FDBBA393-3007-4B53-A2A3-44F140906E37}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FDBBA393-3007-4B53-A2A3-44F140906E37}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FDBBA393-3007-4B53-A2A3-44F140906E37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5098CBEB-2DAE-453A-B3FD-DB65C8218B7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5098CBEB-2DAE-453A-B3FD-DB65C8218B7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5098CBEB-2DAE-453A-B3FD-DB65C8218B7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5098CBEB-2DAE-453A-B3FD-DB65C8218B7E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

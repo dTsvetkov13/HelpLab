@@ -24,7 +24,6 @@
 
   <ItemGroup>
     <Folder Include="Entities\Migrations\" />
-    <Folder Include="Models\InputModels\" />
   </ItemGroup>
 
   <ItemGroup>

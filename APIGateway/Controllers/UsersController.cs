@@ -11,6 +11,8 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,10 +23,11 @@ namespace APIGateway.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly RabbitMqService _rabbitMqService;
-        public UsersController(RabbitMqService rabbitMqService)
+        private readonly IHttpClientFactory _clientFactory;
+        private static readonly string UsersRoot = "https://localhost:44337/api/microservices/users";
+        public UsersController(IHttpClientFactory clientFactory)
         {
-            _rabbitMqService = rabbitMqService;
+            _clientFactory = clientFactory;
         }
 
         [HttpGet]
@@ -35,7 +38,23 @@ namespace APIGateway.Controllers
 
             string id = User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
 
-            var result = _rabbitMqService.SendWithResult<IdentityUser, string>(id, "users.get");
+            var request = new HttpRequestMessage(HttpMethod.Get, UsersRoot + "?id=" + id);
+            var client = _clientFactory.CreateClient();
+
+            HttpResponseMessage response;
+
+            try
+            {
+                response = await client.SendAsync(request);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500);
+            }
+
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            IdentityUser result = JsonConvert.DeserializeObject<IdentityUser>(responseString);        
 
             return result != null ? Ok(result) : BadRequest("Invalid input");
         }
@@ -43,15 +62,24 @@ namespace APIGateway.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterInputModel input)
         {
-            RegisterUser registerUser = new RegisterUser
-            {
-                Name = input.Name,
-                Surname = input.Surname,
-                Email = input.Email,
-                Password = input.Password
-            };
+            var request = new HttpRequestMessage(HttpMethod.Post, UsersRoot);
+            request.Content = JsonContent.Create(input);
+            var client = _clientFactory.CreateClient();
 
-            RegisterResponse result = _rabbitMqService.SendWithResult<RegisterResponse, RegisterUser>(registerUser, "users.register");
+            HttpResponseMessage response;
+
+            try
+            {
+                response = await client.SendAsync(request);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500);
+            }
+
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            RegisterResponse result = JsonConvert.DeserializeObject<RegisterResponse>(responseString);
 
             return result.Succeeded ? Ok(result) : BadRequest(result);
         }
@@ -62,9 +90,24 @@ namespace APIGateway.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginInputModel input)
         {
-            LoginUser loginUser = new LoginUser { Username = input.UserName, Password = input.Password };
+            var request = new HttpRequestMessage(HttpMethod.Post, UsersRoot + "/login");
+            request.Content = JsonContent.Create(input);
+            var client = _clientFactory.CreateClient();
 
-            LoginResponse result = _rabbitMqService.SendWithResult<LoginResponse, LoginUser>(loginUser, "users.login");
+            HttpResponseMessage response;
+
+            try
+            {
+                response = await client.SendAsync(request);
+            }
+            catch(Exception e)
+            {
+                return StatusCode(500);
+            }
+
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            LoginResponse result = JsonConvert.DeserializeObject<LoginResponse>(responseString);
 
             if (!result.IsError)
             {
@@ -95,17 +138,24 @@ namespace APIGateway.Controllers
         [HttpPut]
         public async Task<IActionResult> Update(UpdateUserInputModel input)
         {
-            UpdateUser updateUser = new UpdateUser
-            {
-                CurrentEmail = input.CurrentEmail,
-                CurrentPassword = input.CurrentPassword,
-                CurrentUserName = input.CurrentUserName,
-                NewEmail = input.NewEmail,
-                NewPassword = input.NewPassword,
-                NewUserName = input.NewUserName
-            };
+            var request = new HttpRequestMessage(HttpMethod.Put, UsersRoot);
+            request.Content = JsonContent.Create(input);
+            var client = _clientFactory.CreateClient();
 
-            var result = _rabbitMqService.SendWithResult<List<UpdateResponse>, UpdateUser>(updateUser, "users.update");
+            HttpResponseMessage response;
+
+            try
+            {
+                response = await client.SendAsync(request);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500);
+            }
+
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            List<UpdateResponse> result = JsonConvert.DeserializeObject<List<UpdateResponse>>(responseString);
 
             foreach (var identityResult in result)
                 if (!identityResult.Succeeded)
@@ -119,8 +169,24 @@ namespace APIGateway.Controllers
         public async Task<IActionResult> Delete()
         {
             string id = User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
+            var request = new HttpRequestMessage(HttpMethod.Delete, UsersRoot + "?id=" + id);
+            
+            var client = _clientFactory.CreateClient();
 
-            var result = _rabbitMqService.SendWithResult<DeleteResponse, string>(id, "users.delete");
+            HttpResponseMessage response;
+
+            try
+            {
+                response = await client.SendAsync(request);
+            }
+            catch (Exception e)
+            {
+                return StatusCode(500);
+            }
+
+            var responseString = await response.Content.ReadAsStringAsync();
+
+            DeleteResponse result = JsonConvert.DeserializeObject<DeleteResponse>(responseString);
 
             return result.Succeeded ? Ok(result) : BadRequest(result);
         }
