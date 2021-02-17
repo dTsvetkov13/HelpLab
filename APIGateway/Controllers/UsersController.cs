@@ -23,11 +23,11 @@ namespace APIGateway.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly IHttpClientFactory _clientFactory;
         private static readonly string UsersRoot = "https://localhost:44337/api/microservices/users";
-        public UsersController(IHttpClientFactory clientFactory)
+        private readonly HttpSender _httpSender;
+        public UsersController(HttpSender httpSender)
         {
-            _clientFactory = clientFactory;
+            _httpSender = httpSender;
         }
 
         [HttpGet]
@@ -37,24 +37,16 @@ namespace APIGateway.Controllers
             //TODO: Change IdentityUser with User
 
             string id = User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
-
-            var request = new HttpRequestMessage(HttpMethod.Get, UsersRoot + "?id=" + id);
-            var client = _clientFactory.CreateClient();
-
-            HttpResponseMessage response;
+            IdentityUser result;
 
             try
             {
-                response = await client.SendAsync(request);
+                result = await _httpSender.SendGetAsync<IdentityUser>(UsersRoot + "?id=" + id);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return StatusCode(500);
             }
-
-            var responseString = await response.Content.ReadAsStringAsync();
-
-            IdentityUser result = JsonConvert.DeserializeObject<IdentityUser>(responseString);        
 
             return result != null ? Ok(result) : BadRequest("Invalid input");
         }
@@ -62,24 +54,16 @@ namespace APIGateway.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterInputModel input)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, UsersRoot);
-            request.Content = JsonContent.Create(input);
-            var client = _clientFactory.CreateClient();
-
-            HttpResponseMessage response;
+            RegisterResponse result;
 
             try
             {
-                response = await client.SendAsync(request);
+                result = await _httpSender.SendPostAsync<RegisterResponse, RegisterInputModel>(input, UsersRoot);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return StatusCode(500);
             }
-
-            var responseString = await response.Content.ReadAsStringAsync();
-
-            RegisterResponse result = JsonConvert.DeserializeObject<RegisterResponse>(responseString);
 
             return result.Succeeded ? Ok(result) : BadRequest(result);
         }
@@ -90,24 +74,16 @@ namespace APIGateway.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginInputModel input)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, UsersRoot + "/login");
-            request.Content = JsonContent.Create(input);
-            var client = _clientFactory.CreateClient();
-
-            HttpResponseMessage response;
+            LoginResponse result;
 
             try
             {
-                response = await client.SendAsync(request);
+                result = await _httpSender.SendPostAsync<LoginResponse, LoginInputModel>(input, UsersRoot + "/login");
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 return StatusCode(500);
             }
-
-            var responseString = await response.Content.ReadAsStringAsync();
-
-            LoginResponse result = JsonConvert.DeserializeObject<LoginResponse>(responseString);
 
             if (!result.IsError)
             {
@@ -139,23 +115,17 @@ namespace APIGateway.Controllers
         public async Task<IActionResult> Update(UpdateUserInputModel input)
         {
             var request = new HttpRequestMessage(HttpMethod.Put, UsersRoot);
-            request.Content = JsonContent.Create(input);
-            var client = _clientFactory.CreateClient();
 
-            HttpResponseMessage response;
+            List<UpdateResponse> result;
 
             try
             {
-                response = await client.SendAsync(request);
+                result = await _httpSender.SendPutAsync<List<UpdateResponse>, UpdateUserInputModel>(input, UsersRoot);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return StatusCode(500);
             }
-
-            var responseString = await response.Content.ReadAsStringAsync();
-
-            List<UpdateResponse> result = JsonConvert.DeserializeObject<List<UpdateResponse>>(responseString);
 
             foreach (var identityResult in result)
                 if (!identityResult.Succeeded)
@@ -169,24 +139,17 @@ namespace APIGateway.Controllers
         public async Task<IActionResult> Delete()
         {
             string id = User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            var request = new HttpRequestMessage(HttpMethod.Delete, UsersRoot + "?id=" + id);
-            
-            var client = _clientFactory.CreateClient();
 
-            HttpResponseMessage response;
+            DeleteResponse result;
 
             try
             {
-                response = await client.SendAsync(request);
+                result = await _httpSender.SendDeleteAsync<DeleteResponse>(UsersRoot + "?id=" + id);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return StatusCode(500);
             }
-
-            var responseString = await response.Content.ReadAsStringAsync();
-
-            DeleteResponse result = JsonConvert.DeserializeObject<DeleteResponse>(responseString);
 
             return result.Succeeded ? Ok(result) : BadRequest(result);
         }

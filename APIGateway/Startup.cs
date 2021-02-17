@@ -32,6 +32,7 @@ namespace APIGateway
             IdentityModelEventSource.ShowPII = true;
 
             services.AddSingleton<RabbitMqService>();
+            services.AddSingleton<HttpSender>();
 
             services.AddCors(options =>
             {
