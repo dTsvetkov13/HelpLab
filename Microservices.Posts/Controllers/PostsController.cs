@@ -36,7 +36,7 @@ namespace Microservices.Posts.Controllers
             {
                 result = await _postService.Create(input.Title, input.Description,
                                                   input.PublishedAt, input.AuthorId);
-
+                
                 if (result.State == Microsoft.EntityFrameworkCore.EntityState.Unchanged)
                 {
                     postResponse = new SimpleRequestResponse

@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microservices.Models.Messages;
+using Microservices.EventBus;
 
 namespace Microservices.Posts.Services
 {
@@ -27,6 +29,11 @@ namespace Microservices.Posts.Services
                                                             });
             
             _dbContext.SaveChanges();
+
+            AmqpEventBus messenger = new AmqpEventBus();
+            
+            //Send message to the Microservices.Users
+            messenger.Publish(authorId, MessagesEnum.PostsCreatedRoute);
 
             return result;
         }

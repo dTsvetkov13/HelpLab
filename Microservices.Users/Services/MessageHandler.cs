@@ -1,4 +1,5 @@
-﻿using Microservices.EventBus.Interfaces;
+﻿using Microservices.EventBus;
+using Microservices.EventBus.Interfaces;
 using Microservices.Models.Messages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,26 +25,17 @@ namespace Microservices.Users.Services
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _eventBus.Subscribe<EventMessage>(Guid.NewGuid().ToString(), ReceiveEventMessage, x => x.WithTopic("posts.*"));
+            _eventBus.Subscribe<string>(Guid.NewGuid().ToString(), ReceiveEventMessage, x => x.WithTopic(MessagesEnum.PostsCreatedRoute));
 
             return Task.CompletedTask;
         }
 
-        private void ReceiveEventMessage(EventMessage eventMessage)
+        private void ReceiveEventMessage(string userId)
         {
-            switch (eventMessage.Event)
+            using (var scope = _serviceProvider.CreateScope())
             {
-                case EventsEnum.PostAdded:
-                {
-                    using (var scope = _serviceProvider.CreateScope())
-                    {
-                        var service = scope.ServiceProvider.GetService<IUserService>();
-                        service.IncreasePostsCount(eventMessage.UserId);
-                    }
-                    break;
-                }
-                default:
-                    break;
+                var service = scope.ServiceProvider.GetService<IUserService>();
+                service.IncreasePostsCount(userId);
             }
         }
     }
