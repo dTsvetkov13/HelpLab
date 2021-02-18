@@ -4,10 +4,10 @@ using System;
 
 namespace Microservices.EventBus
 {
-    public class EventBus : IEventuBus
+    public class AmqpEventBus : Interfaces.IEventBus
     {
         private readonly IBus Bus;
-        public EventBus()
+        public AmqpEventBus()
         {
             Bus = RabbitHutch.CreateBus("host=localhost");
         }

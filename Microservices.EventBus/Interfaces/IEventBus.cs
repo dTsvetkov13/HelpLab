@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Microservices.EventBus.Interfaces
 {
-    public interface IEventuBus
+    public interface IEventBus
     {
         void Publish<T>(T message, string route);
 
