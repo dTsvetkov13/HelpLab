@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Microservices.Messenger
+namespace Microservices.EventBus
 {
     public class MessagesEnum
     {
