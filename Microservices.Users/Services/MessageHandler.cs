@@ -25,17 +25,27 @@ namespace Microservices.Users.Services
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _eventBus.Subscribe<string>(Guid.NewGuid().ToString(), ReceiveEventMessage, x => x.WithTopic(MessagesEnum.PostsCreatedRoute));
+            _eventBus.Subscribe<string>(Guid.NewGuid().ToString(), CatchPostsAdded, x => x.WithTopic(MessagesEnum.PostsCreatedRoute));
+            _eventBus.Subscribe<string>(Guid.NewGuid().ToString(), CatchPostsDeleted, x => x.WithTopic(MessagesEnum.PostsDeletedRoute));
 
             return Task.CompletedTask;
         }
 
-        private void ReceiveEventMessage(string userId)
+        private void CatchPostsAdded(string userId)
         {
             using (var scope = _serviceProvider.CreateScope())
             {
                 var service = scope.ServiceProvider.GetService<IUserService>();
                 service.IncreasePostsCount(userId);
+            }
+        }
+
+        private void CatchPostsDeleted(string userId)
+        {
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var service = scope.ServiceProvider.GetService<IUserService>();
+                service.DecreasePostsCount(userId);
             }
         }
     }

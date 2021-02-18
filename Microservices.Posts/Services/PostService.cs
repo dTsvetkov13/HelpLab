@@ -49,8 +49,11 @@ namespace Microservices.Posts.Services
 
         public async Task<EntityEntry> Delete(string id)
         {
-            EntityEntry result = _dbContext.Posts.Remove(await Get(id));
+            var currentPost = await Get(id);
+            EntityEntry result = _dbContext.Posts.Remove(currentPost);
             await _dbContext.SaveChangesAsync();
+
+            _eventBus.Publish(currentPost.AuthorId, MessagesEnum.PostsDeletedRoute);
 
             return result;
         }

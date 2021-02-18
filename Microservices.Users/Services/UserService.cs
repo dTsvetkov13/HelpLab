@@ -120,5 +120,12 @@ namespace Microservices.Users
 
             _dbContext.SaveChangesAsync();
         }
+
+        public async Task DecreasePostsCount(string id)
+        {
+            var user = Get(id).Result.PostsCount--;
+
+            _dbContext.SaveChangesAsync();
+        }
     }
 }
