@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microservices.Users.Entities;
 using Microservices.Users.Entities.Models;
+using Microservices.Models.Messages;
 
 namespace Microservices.Users
 {
@@ -21,7 +22,25 @@ namespace Microservices.Users
         {
             _userManager = userManager;
             _dbContext = dbContext;
+
+            //Messenger.Messenger messenger = new Messenger.Messenger();
+
+            //messenger.Subscribe<EventMessage>(Guid.NewGuid().ToString(), ReceiveEventMessage);
         }
+
+        /*private void ReceiveEventMessage(EventMessage eventMessage)
+        {
+            switch (eventMessage.Event)
+            {
+                case EventsEnum.PostAdded:
+                    {
+                        IncreasePostsCount(eventMessage.UserId);
+                        break;
+                    }
+                default:
+                    break;
+            }
+        }*/
 
         public async Task<TokenResponse> Authenticate(string username, string password)
         {
@@ -39,7 +58,7 @@ namespace Microservices.Users
                 AuthorizationHeaderStyle = BasicAuthenticationHeaderStyle.Rfc2617,
 
                 UserName = username,
-                Password = password
+                Password = password,
             });
             Console.WriteLine("Is error: " + result.IsError + " " + result.Error + " " + result.ErrorDescription);
             Console.WriteLine("Token: " + result.AccessToken);
@@ -93,6 +112,13 @@ namespace Microservices.Users
             IdentityResult result = await _userManager.DeleteAsync(await Get(id));
 
             return result;
+        }
+
+        public async Task IncreasePostsCount(string id)
+        {
+            var user = Get(id).Result.PostsCount++;
+
+            _dbContext.SaveChangesAsync();
         }
     }
 }
