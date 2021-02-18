@@ -1,3 +1,5 @@
+using Microservices.EventBus;
+using Microservices.EventBus.Interfaces;
 using Microservices.Users.Entities;
 using Microservices.Users.Entities.Models;
 using Microservices.Users.Services;
@@ -36,7 +38,8 @@ namespace Microservices.Users
                         options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddScoped<IUserService, UserService>();
-            services.AddHostedService<MessageHandler>();            
+            services.AddSingleton<IEventBus, AmqpEventBus>();
+            services.AddHostedService<MessageHandler>();
 
             services.AddIdentity<User, IdentityRole>(options =>
             {

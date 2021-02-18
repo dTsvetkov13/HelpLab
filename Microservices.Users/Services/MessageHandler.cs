@@ -1,4 +1,5 @@
-﻿using Microservices.Models.Messages;
+﻿using Microservices.EventBus.Interfaces;
+using Microservices.Models.Messages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
@@ -13,16 +14,17 @@ namespace Microservices.Users.Services
     public class MessageHandler : BackgroundService
     {
         private readonly IServiceScopeFactory _serviceProvider;
-        public MessageHandler(IServiceScopeFactory scopeFactory)
+        private readonly IEventBus _eventBus;
+        public MessageHandler(IServiceScopeFactory scopeFactory,
+                              IEventBus eventBus)
         {
             _serviceProvider = scopeFactory;
+            _eventBus = eventBus;
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            EventBus.EventBus messenger = new EventBus.EventBus();
-
-            messenger.Subscribe<EventMessage>(Guid.NewGuid().ToString(), ReceiveEventMessage, x => x.WithTopic("posts.*"));
+            _eventBus.Subscribe<EventMessage>(Guid.NewGuid().ToString(), ReceiveEventMessage, x => x.WithTopic("posts.*"));
 
             return Task.CompletedTask;
         }
