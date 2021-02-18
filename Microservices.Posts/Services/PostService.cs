@@ -9,16 +9,20 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microservices.Models.Messages;
 using Microservices.EventBus;
+using Microservices.EventBus.Interfaces;
 
 namespace Microservices.Posts.Services
 {
     public class PostService
     {
         private readonly PostsDbContext _dbContext;
+        private readonly IEventBus _eventBus;
 
-        public PostService(PostsDbContext dbContext)
+        public PostService(PostsDbContext dbContext,
+                           IEventBus eventBus)
         {
             _dbContext = dbContext;
+            _eventBus = eventBus;
         }
 
         public async Task<EntityEntry> Create(string title, string description,
@@ -30,10 +34,8 @@ namespace Microservices.Posts.Services
             
             _dbContext.SaveChanges();
 
-            AmqpEventBus messenger = new AmqpEventBus();
-            
             //Send message to the Microservices.Users
-            messenger.Publish(authorId, MessagesEnum.PostsCreatedRoute);
+            _eventBus.Publish(authorId, MessagesEnum.PostsCreatedRoute);
 
             return result;
         }

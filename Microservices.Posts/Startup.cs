@@ -1,3 +1,5 @@
+using Microservices.EventBus;
+using Microservices.EventBus.Interfaces;
 using Microservices.Posts.Entities;
 using Microservices.Posts.Services;
 using Microsoft.AspNetCore.Builder;
@@ -33,6 +35,7 @@ namespace Microservices.Posts
                         options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddScoped<PostService>();
+            services.AddSingleton<IEventBus, AmqpEventBus>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
