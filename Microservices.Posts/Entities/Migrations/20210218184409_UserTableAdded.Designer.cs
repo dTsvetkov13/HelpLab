@@ -4,14 +4,16 @@ using Microservices.Posts.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Microservices.Posts.Data.Migrations
+namespace Microservices.Posts.Entities.Migrations
 {
     [DbContext(typeof(PostsDbContext))]
-    partial class PostsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210218184409_UserTableAdded")]
+    partial class UserTableAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,7 +47,12 @@ namespace Microservices.Posts.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Posts");
                 });
@@ -68,6 +75,15 @@ namespace Microservices.Posts.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Microservices.Posts.Entities.Models.Post", b =>
+                {
+                    b.HasOne("Microservices.Posts.Entities.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }
