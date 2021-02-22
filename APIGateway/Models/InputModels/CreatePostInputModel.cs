@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace APIGateway.Models.InputModels
 {
-    public class PostInputModel
+    public class CreatePostInputModel
     {
         [Required]
         public string Title { get; set; }
