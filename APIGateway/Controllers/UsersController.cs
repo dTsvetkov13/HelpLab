@@ -1,6 +1,7 @@
 ﻿using APIGateway.Models.InputModels;
 using APIGateway.Services;
 using Microservices.Models;
+using Microservices.Models.UserModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -23,7 +24,7 @@ namespace APIGateway.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private static readonly string UsersRoot = "https://localhost:44337/api/microservices/users";
+        public static readonly string UsersRoot = "https://localhost:44337/api/microservices/users";
         private readonly HttpSender _httpSender;
         public UsersController(HttpSender httpSender)
         {
@@ -37,11 +38,11 @@ namespace APIGateway.Controllers
             //TODO: Change IdentityUser with User
 
             string id = User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
-            IdentityUser result;
+            GetUserResponse result;
 
             try
             {
-                result = await _httpSender.SendGetAsync<IdentityUser>(UsersRoot + "?id=" + id);
+                result = await _httpSender.SendGetAsync<GetUserResponse>(UsersRoot + "?id=" + id);
             }
             catch (Exception)
             {
