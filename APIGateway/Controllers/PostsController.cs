@@ -2,6 +2,7 @@
 using APIGateway.Services;
 using Microservices.Models;
 using Microservices.Models.PostModels;
+using Microservices.Models.UserModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -53,12 +54,15 @@ namespace APIGateway.Controllers
         {
             string userId = User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
 
+            var user = await _httpSender.SendGetAsync<GetUserResponse>(UsersController.UsersRoot  + "?id=" + userId);
+
             PostInput post = new PostInput
             {
                 Title = input.Title,
                 Description = input.Description,
                 PublishedAt = DateTime.UtcNow,
-                AuthorId = userId
+                AuthorId = userId,
+                AuthorName = user.Name
             };
 
             SimpleRequestResponse result;
