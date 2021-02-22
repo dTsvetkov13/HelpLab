@@ -24,19 +24,17 @@ namespace APIGateway.Controllers
     public class PostsController : ControllerBase
     {
         private static readonly string PostsRoot = "https://localhost:44367/api/microservices/posts";
-        private readonly RabbitMqService _rabbitMqService;
         private readonly HttpSender _httpSender;
 
         public PostsController(RabbitMqService rabbitMqService, HttpSender httpSender)
         {
-            _rabbitMqService = rabbitMqService;
             _httpSender = httpSender;
         }
 
         [HttpGet]
-        public IActionResult Get(string id)
+        public async Task<IActionResult> Get(string id)
         {
-            var result = _rabbitMqService.SendWithResult<GetPostResponse, string>(id, "posts.get"); ;
+            var result = await _httpSender.SendGetAsync<GetPostResponse>(PostsRoot + "?id=" + id);
 
             if (result != null)
             {
