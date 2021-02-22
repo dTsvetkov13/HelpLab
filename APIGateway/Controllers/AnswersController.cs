@@ -1,4 +1,7 @@
-﻿using APIGateway.Services;
+﻿using APIGateway.Models.InputModels;
+using APIGateway.Services;
+using Microservices.Models.UserModels;
+using Microservices.Models.AnswerModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -39,26 +42,25 @@ namespace APIGateway.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Create(PostInputModel input)
+        public async Task<IActionResult> Create(CreateAnswerInputModel input)
         {
             string userId = User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
 
             var user = await _httpSender.SendGetAsync<GetUserResponse>(AnswersRoot + "?id=" + userId);
 
-            PostInput post = new PostInput
+            CreateAnswerModel answer = new CreateAnswerModel
             {
-                Title = input.Title,
-                Description = input.Description,
+                Text = input.Text,
                 PublishedAt = DateTime.UtcNow,
                 AuthorId = userId,
-                AuthorName = user.Name
-            };
-
-            SimpleRequestResponse result;
+                AuthorName = user.Name,
+                AnswerId = input.AnswerId,
+                PostId = input.PostId
+            };            
 
             try
             {
-                result = await _httpSender.SendPostAsync<SimpleRequestResponse, PostInput>(post, AnswersRoot);
+                await _httpSender.SendPostAsync<string, CreateAnswerModel>(answer, AnswersRoot);
             }
             catch (Exception)
             {
