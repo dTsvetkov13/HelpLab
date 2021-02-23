@@ -26,11 +26,20 @@ namespace Microservices.Posts.Services
         }
 
         public async Task<EntityEntry> Create(string title, string description,
-                      DateTime publishedAt, string authorId)
+                      DateTime publishedAt, string authorId, string authorName)
         {
             var result = await _dbContext.AddAsync(new Post { Title = title, Description = description,
                                                               PublishedAt = publishedAt, AuthorId = authorId
                                                             });
+
+            if((await _dbContext.Users.FirstOrDefaultAsync(User => User.Id == authorId)) == null)
+            {
+                await _dbContext.AddAsync(new User
+                {
+                    Id = authorId,
+                    Name = authorName
+                });
+            }
             
             _dbContext.SaveChanges();
 

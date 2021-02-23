@@ -35,7 +35,8 @@ namespace Microservices.Posts.Controllers
             try
             {
                 result = await _postService.Create(input.Title, input.Description,
-                                                  input.PublishedAt, input.AuthorId);
+                                                  input.PublishedAt, input.AuthorId,
+                                                  input.AuthorName);
                 
                 if (result.State == Microsoft.EntityFrameworkCore.EntityState.Unchanged)
                 {

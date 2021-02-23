@@ -13,5 +13,7 @@ namespace Microservices.Models.PostModels
         public DateTime PublishedAt { get; set; }
 
         public string AuthorId { get; set; }
+
+        public string AuthorName { get; set; }
     }
 }

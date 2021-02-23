@@ -18,5 +18,7 @@ namespace Microservices.Posts.Models.InputModels
 
         [Required]
         public string AuthorId { get; set; }
+
+        public string AuthorName { get; set; }
     }
 }
