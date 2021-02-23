@@ -13,10 +13,5 @@ namespace Microservices.Posts.Entities.Models
         public string Id { get; set; }
 
         public string Name { get; set; }
-
-        public string Surname { get; set; }
-
-        [Required]
-        public string Email { get; set; }
     }
 }
