@@ -1,4 +1,7 @@
 using Microservices.Answers.Entities;
+using Microservices.Answers.Services;
+using Microservices.EventBus;
+using Microservices.EventBus.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -30,6 +33,9 @@ namespace Microservices.Answers
         {
             services.AddDbContext<AnswersDbContext>(options =>
                         options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddScoped<AnswerService>();
+            services.AddSingleton<IEventBus, AmqpEventBus>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

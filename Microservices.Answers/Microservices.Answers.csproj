@@ -22,8 +22,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
     <Folder Include="Entities\Migrations\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Microservices.EventBus\Microservices.EventBus.csproj" />
+    <ProjectReference Include="..\Microservices.Models\Microservices.Models.csproj" />
   </ItemGroup>
 
 </Project>

@@ -16,5 +16,11 @@ namespace Microservices.Answers.Models.InputModels
 
         [Required]
         public string AuthorId { get; set; }
+
+        public string AuthorName { get; set; }
+
+        public string PostId { get; set; }
+
+        public string AnswerId { get; set; }
     }
 }
