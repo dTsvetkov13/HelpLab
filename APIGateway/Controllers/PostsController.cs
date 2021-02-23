@@ -48,7 +48,7 @@ namespace APIGateway.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Create(PostInputModel input)
+        public async Task<IActionResult> Create(CreatePostInputModel input)
         {
             string userId = User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
 

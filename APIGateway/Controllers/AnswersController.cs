@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microservices.Models.Common;
 
 namespace APIGateway.Controllers
 {
@@ -17,7 +18,7 @@ namespace APIGateway.Controllers
     [ApiController]
     public class AnswersController : ControllerBase
     {
-        private static readonly string AnswersRoot = "https://localhost:44367/api/microservices/answers";
+        private static readonly string AnswersRoot = "https://localhost:44301/api/microservices/answers";
         private readonly HttpSender _httpSender;
 
         public AnswersController(HttpSender httpSender)
@@ -28,11 +29,11 @@ namespace APIGateway.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(string id)
         {
-            var result = await _httpSender.SendGetAsync<GetPostResponse>(AnswersRoot + "?id=" + id);
+            GetAnswerModel response = await _httpSender.SendGetAsync<GetAnswerModel>(AnswersRoot + "?id=" + id);
 
-            if (result != null)
+            if (response != null)
             {
-                return Ok(result);
+                return Ok(response);
             }
             else
             {
@@ -46,7 +47,7 @@ namespace APIGateway.Controllers
         {
             string userId = User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
 
-            var user = await _httpSender.SendGetAsync<GetUserResponse>(AnswersRoot + "?id=" + userId);
+            var user = await _httpSender.SendGetAsync<GetUserResponse>(UsersController.UsersRoot + "?id=" + userId);
 
             CreateAnswerModel answer = new CreateAnswerModel
             {
@@ -56,24 +57,30 @@ namespace APIGateway.Controllers
                 AuthorName = user.Name,
                 AnswerId = input.AnswerId,
                 PostId = input.PostId
-            };            
+            };
+
+            Response response = new Response();
 
             try
             {
-                await _httpSender.SendPostAsync<string, CreateAnswerModel>(answer, AnswersRoot);
+                response = await _httpSender.SendPostAsync<Response, CreateAnswerModel>(answer, AnswersRoot);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return StatusCode(500);
             }
 
-            if (result.Succeeded)
+            if (response.Status == Statuses.Ok)
             {
                 return Ok();
             }
+            else if (response.Status == Statuses.ServerError)
+            {
+                return StatusCode(500, response.Error);
+            }
             else
             {
-                return StatusCode(500, result.Error);
+                return BadRequest(response.Error);
             }
         }
 
@@ -89,24 +96,28 @@ namespace APIGateway.Controllers
         {
             string userId = User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
 
-            SimpleRequestResponse response = new SimpleRequestResponse();
+            Response response = new Response();
 
             try
             {
-                response = await _httpSender.SendDeleteAsync<SimpleRequestResponse>(AnswersRoot + "?id=" + id + "&userId=" + userId);
+                response = await _httpSender.SendDeleteAsync<Response>(AnswersRoot + "?id=" + id + "&userId=" + userId);
             }
             catch (Exception)
             {
                 return StatusCode(500);
             }
 
-            if (response.Succeeded)
+            if (response.Status == Statuses.Ok)
             {
-                return Ok(response);
+                return Ok();
+            }
+            else if(response.Status == Statuses.ServerError)
+            {
+                return StatusCode(500, response.Error);
             }
             else
             {
-                return BadRequest(response);
+                return BadRequest(response.Error);
             }
         }
     }
