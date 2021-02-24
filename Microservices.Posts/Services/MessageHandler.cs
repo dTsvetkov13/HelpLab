@@ -1,4 +1,5 @@
-﻿using Microservices.EventBus.Interfaces;
+﻿using Microservices.EventBus;
+using Microservices.EventBus.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
