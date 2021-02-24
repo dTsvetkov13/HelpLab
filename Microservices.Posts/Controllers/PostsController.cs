@@ -1,4 +1,5 @@
-﻿using Microservices.Models.PostModels;
+﻿using Microservices.Models.Common;
+using Microservices.Models.PostModels;
 using Microservices.Posts.Entities.Models;
 using Microservices.Posts.Models.InputModels;
 using Microservices.Posts.Services;
@@ -38,51 +39,33 @@ namespace Microservices.Posts.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateInputModel input)
         {
-            EntityEntry result;
-            SimpleRequestResponse postResponse = new SimpleRequestResponse();
-
-            try
-            {
-                result = await _postService.Create(input.Title, input.Description,
-                                                  DateTime.UtcNow, input.AuthorId,
-                                                  input.AuthorName);
+            Status result = await _postService.Create(input.Title, input.Description,
+                                                      DateTime.UtcNow, input.AuthorId,
+                                                      input.AuthorName);
                 
-                if (result.State == Microsoft.EntityFrameworkCore.EntityState.Unchanged)
-                {
-                    postResponse = new SimpleRequestResponse
-                    {
-                        Error = "",
-                        IsError = false,
-                        Succeeded = true
-                    };
-                }
-            }
-            catch (Exception e)
+            if (result == Status.Ok)
             {
-                Console.WriteLine(" [.] " + e.Message);
-
-                //TODO: log e.Message
-
-                postResponse = new SimpleRequestResponse
+                return Ok(new Response
                 {
-                    Error = "This post cannot be added now. Excuse us!",
-                    IsError = true,
-                    Succeeded = false
-                };
+                    Status = result,
+                    Error = ""
+                });
             }
-
-            if(postResponse.Succeeded)
+            else if(result == Status.InvalidData)
             {
-                return Ok(new SimpleRequestResponse
+                return BadRequest(new Response
                 {
-                    Succeeded = true,
-                    Error = "",
-                    IsError = false
+                    Status = result,
+                    Error = ""
                 });
             }
             else
             {
-                return BadRequest(postResponse);
+                return StatusCode(500, (new Response
+                {
+                    Status = result,
+                    Error = ""
+                }));
             }
         }
 
