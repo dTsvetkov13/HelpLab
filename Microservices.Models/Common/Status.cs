@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Microservices.Models.Common
 {
-    public enum Statuses
+    public enum Status
     {
         Ok,
         InvalidData,

@@ -6,7 +6,7 @@ namespace Microservices.Models.Common
 {
     public class Response
     {
-        public Statuses Status { set; get; }
+        public Status Status { set; get; }
 
         public string Error { set; get; }
     }
