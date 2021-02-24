@@ -70,9 +70,37 @@ namespace Microservices.Posts.Controllers
         }
 
         [HttpPut]
-        public void Update(UpdateInputModel input)
+        public async Task<IActionResult> Update(UpdateInputModel input)
         {
-            
+            Guid guidPostId = input.PostId != null ? Guid.Parse(input.PostId) : Guid.Empty;
+
+            var result = await _postService.Update(guidPostId, input.Title,
+                                                   input.Description, DateTime.UtcNow);
+
+            if (result == Status.Ok)
+            {
+                return Ok(new Response
+                {
+                    Status = result,
+                    Error = ""
+                });
+            }
+            else if (result == Status.InvalidData)
+            {
+                return BadRequest(new Response
+                {
+                    Status = result,
+                    Error = ""
+                });
+            }
+            else
+            {
+                return StatusCode(500, (new Response
+                {
+                    Status = result,
+                    Error = ""
+                }));
+            }
         }
 
         [HttpDelete]

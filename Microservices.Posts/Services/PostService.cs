@@ -93,5 +93,43 @@ namespace Microservices.Posts.Services
 
             return Status.Ok;
         }
+
+        public async Task<Status> Update(Guid postId, string title, string description, DateTime editedAt)
+        {
+            try
+            {
+                if(postId == Guid.Empty)
+                {
+                    return Status.InvalidData;
+                }
+
+                var post = await _dbContext.Posts.FirstOrDefaultAsync<Post>(post => post.Id == postId);
+
+                if (post == null)
+                {
+                    return Status.InvalidData;
+                }
+
+                if (title != null)
+                {
+                    post.Title = title;
+                    post.LastEditedAt = editedAt;
+                }
+
+                if (description != null)
+                {
+                    post.Description = description;
+                    post.LastEditedAt = editedAt;
+                }
+
+                await _dbContext.SaveChangesAsync();
+            }
+            catch(Exception e)
+            {
+                return Status.ServerError;
+            }
+
+            return Status.Ok;
+        }
     }
 }
