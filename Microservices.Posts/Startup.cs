@@ -36,6 +36,7 @@ namespace Microservices.Posts
 
             services.AddScoped<PostService>();
             services.AddSingleton<IEventBus, AmqpEventBus>();
+            services.AddSingleton<MessageHandler>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
