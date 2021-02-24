@@ -27,10 +27,10 @@ namespace APIGateway.Controllers
             _httpSender = httpSender;
         }
 
-        [HttpGet]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
-            GetAnswerModel response = await _httpSender.SendGetAsync<GetAnswerModel>(AnswersRoot + "?id=" + id);
+            GetAnswerModel response = await _httpSender.SendGetAsync<GetAnswerModel>(AnswersRoot + "/" + id);
 
             if (response != null)
             {

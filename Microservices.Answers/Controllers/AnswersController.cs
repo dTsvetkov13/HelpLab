@@ -23,7 +23,7 @@ namespace Microservices.Answers.Controllers
             _answerService = answerService;
         }
 
-        [HttpGet]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
             Answer result = await _answerService.Get(id);
