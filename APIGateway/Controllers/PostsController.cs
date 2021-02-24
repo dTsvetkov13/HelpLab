@@ -1,6 +1,7 @@
 ﻿using APIGateway.Models.InputModels;
 using APIGateway.Services;
 using Microservices.Models;
+using Microservices.Models.Common;
 using Microservices.Models.PostModels;
 using Microservices.Models.UserModels;
 using Microsoft.AspNetCore.Authorization;
@@ -58,7 +59,6 @@ namespace APIGateway.Controllers
             {
                 Title = input.Title,
                 Description = input.Description,
-                PublishedAt = DateTime.UtcNow,
                 AuthorId = userId,
                 AuthorName = user.Name
             };
@@ -85,9 +85,34 @@ namespace APIGateway.Controllers
         }
 
         [HttpPut]
-        public void Update(string s)
+        public async Task<IActionResult> Update(UpdatePostInputModel input)
         {
+            var result = await _httpSender.SendPutAsync<Response, UpdatePostInputModel>(input, PostsRoot);
 
+            if (result.Status == Status.Ok)
+            {
+                return Ok(new Response
+                {
+                    Status = result.Status,
+                    Error = result.Error
+                });
+            }
+            else if (result.Status == Status.InvalidData)
+            {
+                return BadRequest(new Response
+                {
+                    Status = result.Status,
+                    Error = result.Error
+                });
+            }
+            else
+            {
+                return StatusCode(500, (new Response
+                {
+                    Status = result.Status,
+                    Error = result.Error
+                }));
+            }
         }
 
         [HttpDelete]
