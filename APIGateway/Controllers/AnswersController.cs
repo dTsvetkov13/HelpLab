@@ -69,11 +69,11 @@ namespace APIGateway.Controllers
                 return StatusCode(500);
             }
 
-            if (response.Status == Statuses.Ok)
+            if (response.Status == Status.Ok)
             {
                 return Ok();
             }
-            else if (response.Status == Statuses.ServerError)
+            else if (response.Status == Status.ServerError)
             {
                 return StatusCode(500, response.Error);
             }
@@ -106,11 +106,11 @@ namespace APIGateway.Controllers
                 return StatusCode(500);
             }
 
-            if (response.Status == Statuses.Ok)
+            if (response.Status == Status.Ok)
             {
                 return Ok();
             }
-            else if(response.Status == Statuses.ServerError)
+            else if(response.Status == Status.ServerError)
             {
                 return StatusCode(500, response.Error);
             }

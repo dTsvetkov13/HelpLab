@@ -49,11 +49,11 @@ namespace Microservices.Answers.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateInputModel input)
         {
-            Statuses result = await _answerService.Create(input.Text, DateTime.UtcNow,
+            Status result = await _answerService.Create(input.Text, DateTime.UtcNow,
                                                           input.AuthorId, input.AuthorName,
                                                           input.PostId, input.AnswerId);
 
-            if(result == Statuses.Ok)
+            if(result == Status.Ok)
             {
                 return Ok(new Response
                 {
@@ -61,7 +61,7 @@ namespace Microservices.Answers.Controllers
                     Error = ""
                 });
             }
-            else if(result == Statuses.InvalidData)
+            else if(result == Status.InvalidData)
             {
                 return BadRequest(new Response
                 {
@@ -88,9 +88,9 @@ namespace Microservices.Answers.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete(string id)
         {
-            Statuses result = await _answerService.Delete(id);
+            Status result = await _answerService.Delete(id);
 
-            if (result == Statuses.Ok)
+            if (result == Status.Ok)
             {
                 return Ok(new Response
                 {
@@ -98,7 +98,7 @@ namespace Microservices.Answers.Controllers
                     Error = ""
                 });
             }
-            else if (result == Statuses.InvalidData)
+            else if (result == Status.InvalidData)
             {
                 return BadRequest(new Response
                 {

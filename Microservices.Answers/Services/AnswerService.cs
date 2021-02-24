@@ -24,7 +24,7 @@ namespace Microservices.Answers.Services
             _eventBus = eventBus;
         }
 
-        public async Task<Statuses> Create(string text, DateTime publishedAt, 
+        public async Task<Status> Create(string text, DateTime publishedAt, 
                                               string authorId, string authorName,
                                               string postId, string answerId)
         {
@@ -44,7 +44,7 @@ namespace Microservices.Answers.Services
 
                 if(result.State != EntityState.Added)
                 {
-                    return Statuses.InvalidData;
+                    return Status.InvalidData;
                 }
 
                 /*if ((await _dbContext.Users.FirstOrDefaultAsync(User => User.Id == authorId)) == null)
@@ -62,10 +62,10 @@ namespace Microservices.Answers.Services
             }
             catch (Exception e)
             {
-                return Statuses.ServerError;
+                return Status.ServerError;
             }
 
-            return Statuses.Ok;
+            return Status.Ok;
         }
 
         public async Task<Answer> Get(string id)
@@ -75,7 +75,7 @@ namespace Microservices.Answers.Services
             return result;
         }
 
-        public async Task<Statuses> Delete(string id)
+        public async Task<Status> Delete(string id)
         {
             try
             {
@@ -83,7 +83,7 @@ namespace Microservices.Answers.Services
 
                 if(currentAnswer == null)
                 {
-                    return Statuses.InvalidData;
+                    return Status.InvalidData;
                 }
 
                 EntityEntry result = _dbContext.Answers.Remove(currentAnswer);
@@ -93,10 +93,10 @@ namespace Microservices.Answers.Services
             }
             catch(Exception)
             {
-                return Statuses.ServerError;
+                return Status.ServerError;
             }
 
-            return Statuses.Ok;
+            return Status.Ok;
         }
     }
 }
