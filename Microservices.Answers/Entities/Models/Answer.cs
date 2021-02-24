@@ -26,5 +26,7 @@ namespace Microservices.Answers.Entities.Models
         public Guid PostId { get; set; }
 
         public Guid AnswerId { get; set; }
+
+        public int AnswersCount { get; set; }
     }
 }
