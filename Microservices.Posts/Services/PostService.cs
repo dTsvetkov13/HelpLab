@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microservices.Models.Messages;
 using Microservices.EventBus;
 using Microservices.EventBus.Interfaces;
+using Microservices.Models.Common;
 
 namespace Microservices.Posts.Services
 {
@@ -25,28 +26,46 @@ namespace Microservices.Posts.Services
             _eventBus = eventBus;
         }
 
-        public async Task<EntityEntry> Create(string title, string description,
+        public async Task<Status> Create(string title, string description,
                       DateTime publishedAt, string authorId, string authorName)
         {
-            var result = await _dbContext.AddAsync(new Post { Title = title, Description = description,
-                                                              PublishedAt = publishedAt, AuthorId = authorId
-                                                            });
-
-            if((await _dbContext.Users.FirstOrDefaultAsync(User => User.Id == authorId)) == null)
+            try
             {
-                await _dbContext.AddAsync(new User
+                var result = await _dbContext.AddAsync(new Post
                 {
-                    Id = authorId,
-                    Name = authorName
+                    Title = title,
+                    Description = description,
+                    PublishedAt = publishedAt,
+                    AuthorId = authorId
                 });
+
+                if(result.State == EntityState.Added)
+                {
+                    if ((await _dbContext.Users.FirstOrDefaultAsync(User => User.Id == authorId)) == null)
+                    {
+                        await _dbContext.AddAsync(new User
+                        {
+                            Id = authorId,
+                            Name = authorName
+                        });
+                    }
+
+                    _dbContext.SaveChanges();
+
+                    //Publish message to the Event bus
+                    _eventBus.Publish(authorId, MessagesEnum.PostsCreatedRoute);
+                }
+                else
+                {
+                    return Status.InvalidData;
+                }
             }
-            
-            _dbContext.SaveChanges();
+            catch(Exception e)
+            {
+                return Status.ServerError;
+            }
 
-            //Send message to the Microservices.Users
-            _eventBus.Publish(authorId, MessagesEnum.PostsCreatedRoute);
-
-            return result;
+            return Status.Ok;
         }
 
         public async Task<Post> Get(string id)
@@ -56,15 +75,23 @@ namespace Microservices.Posts.Services
             return result;
         }
 
-        public async Task<EntityEntry> Delete(string id)
+        public async Task<Status> Delete(string id)
         {
-            var currentPost = await Get(id);
-            EntityEntry result = _dbContext.Posts.Remove(currentPost);
-            await _dbContext.SaveChangesAsync();
+            try
+            {
+                var currentPost = await Get(id);
+                EntityEntry result = _dbContext.Posts.Remove(currentPost);
 
-            _eventBus.Publish(currentPost.AuthorId, MessagesEnum.PostsDeletedRoute);
+                await _dbContext.SaveChangesAsync();
 
-            return result;
+                _eventBus.Publish(currentPost.AuthorId, MessagesEnum.PostsDeletedRoute);
+            }
+            catch(Exception e)
+            {
+                return Status.ServerError;
+            }
+
+            return Status.Ok;
         }
     }
 }
