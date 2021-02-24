@@ -74,6 +74,38 @@ namespace Microservices.Answers.Services
 
             return result;
         }
+        
+        public async Task<Status> Update(Guid answerId, string text, DateTime editedAt)
+        {
+            try
+            {
+                if (answerId == Guid.Empty)
+                {
+                    return Status.InvalidData;
+                }
+
+                var answer = await _dbContext.Answers.FirstOrDefaultAsync<Answer>(answer => answer.Id == answerId);
+
+                if (answer == null)
+                {
+                    return Status.InvalidData;
+                }
+
+                if (text != null)
+                {
+                    answer.Text = text;
+                    answer.LastEditedAt = editedAt;
+                }
+
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return Status.ServerError;
+            }
+
+            return Status.Ok;
+        }
 
         public async Task<Status> Delete(string id)
         {

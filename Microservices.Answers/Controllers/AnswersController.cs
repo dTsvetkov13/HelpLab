@@ -82,7 +82,34 @@ namespace Microservices.Answers.Controllers
         [HttpPut]
         public async Task<IActionResult> Update(UpdateInputModel input)
         {
-            return BadRequest();
+            Guid guidAnswerId = input.AnswerId != null ? Guid.Parse(input.AnswerId) : Guid.Empty;
+
+            var result = await _answerService.Update(guidAnswerId, input.Text, DateTime.UtcNow);
+
+            if (result == Status.Ok)
+            {
+                return Ok(new Response
+                {
+                    Status = result,
+                    Error = ""
+                });
+            }
+            else if (result == Status.InvalidData)
+            {
+                return BadRequest(new Response
+                {
+                    Status = result,
+                    Error = ""
+                });
+            }
+            else
+            {
+                return StatusCode(500, new Response
+                {
+                    Status = result,
+                    Error = ""
+                });
+            }
         }
 
         [HttpDelete]

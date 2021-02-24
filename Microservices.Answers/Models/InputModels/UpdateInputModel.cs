@@ -9,9 +9,9 @@ namespace Microservices.Answers.Models.InputModels
     public class UpdateInputModel
     {
         [Required]
-        public string Text { get; set; }
+        public string AnswerId { get; set; }
 
         [Required]
-        public DateTime EditedAt { get; set; }
+        public string Text { get; set; }
     }
 }
