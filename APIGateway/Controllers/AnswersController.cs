@@ -52,7 +52,6 @@ namespace APIGateway.Controllers
             CreateAnswerModel answer = new CreateAnswerModel
             {
                 Text = input.Text,
-                PublishedAt = DateTime.UtcNow,
                 AuthorId = userId,
                 AuthorName = user.Name,
                 AnswerId = input.AnswerId,

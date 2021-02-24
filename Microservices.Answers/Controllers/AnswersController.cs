@@ -49,7 +49,7 @@ namespace Microservices.Answers.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateInputModel input)
         {
-            Statuses result = await _answerService.Create(input.Text, input.PublishedAt,
+            Statuses result = await _answerService.Create(input.Text, DateTime.UtcNow,
                                                           input.AuthorId, input.AuthorName,
                                                           input.PostId, input.AnswerId);
 
