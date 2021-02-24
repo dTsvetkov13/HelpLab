@@ -131,5 +131,19 @@ namespace Microservices.Posts.Services
 
             return Status.Ok;
         }
+
+        public void IncreaseAnswersCount(string postId)
+        {
+            Get(postId).Result.AnswersCount++;
+
+            _dbContext.SaveChangesAsync();
+        }
+
+        public void DecreaseAnswersCount(string postId)
+        {
+            Get(postId).Result.AnswersCount--;
+
+            _dbContext.SaveChangesAsync();
+        }
     }
 }
