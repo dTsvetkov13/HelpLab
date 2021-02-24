@@ -16,6 +16,7 @@ namespace Microservices.Users.Services
     {
         private readonly IServiceScopeFactory _serviceProvider;
         private readonly IEventBus _eventBus;
+
         public MessageHandler(IServiceScopeFactory scopeFactory,
                               IEventBus eventBus)
         {
@@ -27,6 +28,8 @@ namespace Microservices.Users.Services
         {
             _eventBus.Subscribe<string>(Guid.NewGuid().ToString(), CatchPostsAdded, x => x.WithTopic(MessagesEnum.PostsCreatedRoute));
             _eventBus.Subscribe<string>(Guid.NewGuid().ToString(), CatchPostsDeleted, x => x.WithTopic(MessagesEnum.PostsDeletedRoute));
+            _eventBus.Subscribe<string>(Guid.NewGuid().ToString(), CatchAnswerAdded, x => x.WithTopic(MessagesEnum.AnswersCreatedRoute));
+            _eventBus.Subscribe<string>(Guid.NewGuid().ToString(), CatchAnswerDeleted, x => x.WithTopic(MessagesEnum.AnswersDeletedRoute));
 
             return Task.CompletedTask;
         }
@@ -46,6 +49,24 @@ namespace Microservices.Users.Services
             {
                 var service = scope.ServiceProvider.GetService<IUserService>();
                 service.DecreasePostsCount(userId);
+            }
+        }
+
+        private void CatchAnswerAdded(string userId)
+        {
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var service = scope.ServiceProvider.GetService<IUserService>();
+                service.IncreaseAnswersCount(userId);
+            }
+        }
+
+        private void CatchAnswerDeleted(string userId)
+        {
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var service = scope.ServiceProvider.GetService<IUserService>();
+                service.DecreaseAnswersCount(userId);
             }
         }
     }

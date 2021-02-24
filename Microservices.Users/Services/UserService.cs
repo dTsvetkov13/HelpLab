@@ -114,16 +114,30 @@ namespace Microservices.Users
             return result;
         }
 
-        public void IncreasePostsCount(string id)
+        public void IncreasePostsCount(string userId)
         {
-            Get(id).Result.PostsCount++;
+            Get(userId).Result.PostsCount++;
 
             _dbContext.SaveChangesAsync();
         }
 
-        public void DecreasePostsCount(string id)
+        public void DecreasePostsCount(string userId)
         {
-            Get(id).Result.PostsCount--;
+            Get(userId).Result.PostsCount--;
+
+            _dbContext.SaveChangesAsync();
+        }
+
+        public void IncreaseAnswersCount(string userId)
+        {
+            Get(userId).Result.AnswersCount++;
+
+            _dbContext.SaveChangesAsync();
+        }
+
+        public void DecreaseAnswersCount(string userId)
+        {
+            Get(userId).Result.AnswersCount--;
 
             _dbContext.SaveChangesAsync();
         }
