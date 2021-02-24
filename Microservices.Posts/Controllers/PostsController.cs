@@ -79,38 +79,44 @@ namespace Microservices.Posts.Controllers
         public async Task<IActionResult> Delete(string id, string userId)
         {
             Post post = await _postService.Get(id);
-            SimpleRequestResponse response;
+            
 
             if(post.AuthorId == userId)
             {
-                try
-                {
-                    var result = await _postService.Delete(id);
+                var result = await _postService.Delete(id);
 
-                    response = new SimpleRequestResponse
+                if (result == Status.Ok)
+                {
+                    return Ok(new Response
                     {
-                        Error = "",
-                        IsError = false,
-                        Succeeded = true
-                    };
-
-                    return Ok(response);
+                        Status = result,
+                        Error = ""
+                    });
                 }
-                catch (Exception)
+                else if (result == Status.InvalidData)
                 {
-                    return StatusCode(500);
+                    return BadRequest(new Response
+                    {
+                        Status = result,
+                        Error = ""
+                    });
+                }
+                else
+                {
+                    return StatusCode(500, (new Response
+                    {
+                        Status = result,
+                        Error = ""
+                    }));
                 }
             }
             else
             {
-                response = new SimpleRequestResponse
+                return BadRequest(new Response
                 {
-                    Error = "You cannot delete this post!",
-                    IsError = true,
-                    Succeeded = false
-                };
-
-                return BadRequest(response);
+                    Status = Status.InvalidData,
+                    Error = "You are not the author, thus you cannot delete this post"
+                });
             }
         }
     }
