@@ -14,9 +14,6 @@ namespace Microservices.Posts.Models.InputModels
         public string Description { get; set; }
 
         [Required]
-        public DateTime PublishedAt { get; set; }
-
-        [Required]
         public string AuthorId { get; set; }
 
         public string AuthorName { get; set; }

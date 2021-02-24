@@ -44,7 +44,7 @@ namespace Microservices.Posts.Controllers
             try
             {
                 result = await _postService.Create(input.Title, input.Description,
-                                                  input.PublishedAt, input.AuthorId,
+                                                  DateTime.UtcNow, input.AuthorId,
                                                   input.AuthorName);
                 
                 if (result.State == Microsoft.EntityFrameworkCore.EntityState.Unchanged)
@@ -89,7 +89,7 @@ namespace Microservices.Posts.Controllers
         [HttpPut]
         public void Update(UpdateInputModel input)
         {
-
+            
         }
 
         [HttpDelete]
