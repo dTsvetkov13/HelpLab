@@ -21,9 +21,18 @@ namespace Microservices.Posts.Controllers
         }
 
         [HttpGet]
-        public void Get()
+        public async Task<IActionResult> Get(string id)
         {
+            Post post = await _postService.Get(id);
 
+            if (post != null)
+            {
+                return Ok(post);
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPost]
