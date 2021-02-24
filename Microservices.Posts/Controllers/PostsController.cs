@@ -21,7 +21,7 @@ namespace Microservices.Posts.Controllers
             _postService = postService;
         }
 
-        [HttpGet]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
             Post post = await _postService.Get(id);

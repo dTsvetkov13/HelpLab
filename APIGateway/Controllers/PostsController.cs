@@ -32,10 +32,10 @@ namespace APIGateway.Controllers
             _httpSender = httpSender;
         }
 
-        [HttpGet]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id)
         {
-            var result = await _httpSender.SendGetAsync<GetPostResponse>(PostsRoot + "?id=" + id);
+            var result = await _httpSender.SendGetAsync<GetPostResponse>(PostsRoot + "/" + id);
 
             if (result != null)
             {
