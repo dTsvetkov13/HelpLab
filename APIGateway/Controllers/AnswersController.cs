@@ -11,6 +11,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microservices.Models.Common;
+using APIGateway.Models.InputModels.AnswerInputModels;
 
 namespace APIGateway.Controllers
 {
@@ -84,9 +85,34 @@ namespace APIGateway.Controllers
         }
 
         [HttpPut]
-        public void Update(string s)
+        public async Task<IActionResult> Update(UpdateAnswerInputModel input)
         {
+            var result = await _httpSender.SendPutAsync<Response, UpdateAnswerInputModel>(input, AnswersRoot);
 
+            if (result.Status == Status.Ok)
+            {
+                return Ok(new Response
+                {
+                    Status = result.Status,
+                    Error = result.Error
+                });
+            }
+            else if (result.Status == Status.InvalidData)
+            {
+                return BadRequest(new Response
+                {
+                    Status = result.Status,
+                    Error = result.Error
+                });
+            }
+            else
+            {
+                return StatusCode(500, (new Response
+                {
+                    Status = result.Status,
+                    Error = result.Error
+                }));
+            }
         }
 
         [HttpDelete]
