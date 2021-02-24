@@ -25,9 +25,9 @@ namespace Microservices.Users
         Task<User> Get(string id);
         Task<IdentityResult> Delete(string id);
 
-        Task IncreasePostsCount(string userId);
+        void IncreasePostsCount(string userId);
 
-        Task DecreasePostsCount(string userId);
+        void DecreasePostsCount(string userId);
         void DecreaseAnswersCount(string userId);
         void IncreaseAnswersCount(string userId);
     }
