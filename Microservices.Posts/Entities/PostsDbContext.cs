@@ -9,6 +9,10 @@ namespace Microservices.Posts.Entities
 {
     public class PostsDbContext : DbContext
     {
+        public PostsDbContext()
+        {
+        }
+
         public PostsDbContext(DbContextOptions options) : base(options)
         {
         }
