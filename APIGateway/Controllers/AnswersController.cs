@@ -46,6 +46,12 @@ namespace APIGateway.Controllers
         [Authorize]
         public async Task<IActionResult> Create(CreateAnswerInputModel input)
         {
+            if(input.AnswerId == null || input.AnswerId == ""
+                || input.PostId == null || input.PostId == "")
+            {
+                return BadRequest("");
+            }
+
             string userId = User.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
 
             var user = await _httpSender.SendGetAsync<GetUserResponse>(UsersController.UsersRoot + "?id=" + userId);
@@ -85,6 +91,7 @@ namespace APIGateway.Controllers
         }
 
         [HttpPut]
+        [Authorize]
         public async Task<IActionResult> Update(UpdateAnswerInputModel input)
         {
             var result = await _httpSender.SendPutAsync<Response, UpdateAnswerInputModel>(input, AnswersRoot);
