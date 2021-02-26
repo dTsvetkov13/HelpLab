@@ -34,4 +34,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   --regular-font-family: "Regular", sans-serif;
   --bold-font-family: "Bold", sans-serif;
   --medium-font-family: "Medium", sans-serif;
+  --dark-theme-background-color: #373737;
+  --dark-theme-primary-button-color: #ea9215;
+  --dark-theme-primary-text-color: #e5e2dd;
 }
