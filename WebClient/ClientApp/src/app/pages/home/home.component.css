@@ -1,3 +1,26 @@
+.page-content {
+    width: 100%;
+    height: 100vh;
+    flex-direction: column;
+    background-color: #373737;
+    color: var(--dark-theme-primary-text-color);
+}
+
 .home-text {
-    font-family: var(--regular-font-family);
+    font-family: var(--bold-font-family);
+}
+
+.introduction-div {
+    height: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.search-instructions-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
