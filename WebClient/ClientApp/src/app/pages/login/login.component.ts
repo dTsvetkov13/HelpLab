@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
   login(email: string, password: string) {
     console.log("Email: " + email + ", password: " + password);
     this.errors = [];
-    this.webRequest.post('api/users/login', { username: email, password: password }).subscribe((res: HttpResponse<any>) => {
+    this.webRequest.post('api/users/login', { email: email, password: password }).subscribe((res: HttpResponse<any>) => {
       console.log("Success login" + res.status);
       
       var data = JSON.parse(res.body);
