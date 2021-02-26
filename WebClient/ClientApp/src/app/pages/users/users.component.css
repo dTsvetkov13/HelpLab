@@ -103,10 +103,6 @@
     padding: 1rem;
 }
 
-.simple-button:focus {
-    color: red;
-}
-
 .activity-tab:focus {
     transform: translateY(1px);
 }

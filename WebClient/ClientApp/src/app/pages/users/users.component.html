@@ -13,24 +13,32 @@
             </div>
         </div>
         <div class="user-activity">
-            <button id="user-posts" class="activity-tab">Posts</button>
-            <button id="user-answers" class="activity-tab">Answers</button>
+            <button id="user-posts" class="activity-tab" (click)="showPosts()">Posts</button>
+            <button id="user-answers" class="activity-tab" (click)="showAnswers()">Answers</button>
             <div class="activity-dashboard">
-                <div class="post-item">
-                    <div class="post-item-data">
-                        <p>Post Title</p>
-                        <p>on 26.02.2021 | 5 answers</p>
-                        <p>Math</p>
+                <div *ngIf="isPostsButtonPressed" class="posts">
+                    <div *ngFor="let post of posts">
+                        <div class="post-item">
+                            <div class="post-item-data">
+                                <p>{{post.title}}</p>
+                                <p>on {{post.publishedAt}} | {{post.answersCount}} answers</p>
+                                <p>Math</p>
+                            </div>
+                            <button class="simple-button orange-button">Read More</button>
+                        </div>
                     </div>
-                    <button class="simple-button orange-button">Read More</button>
                 </div>
-                <div class="answer-item">
-                    <div class="post-item-data">
-                        <p>Post Title</p>
-                        <p>To denis_tsv13@abv.bg | on 26.02.2021 | 5 answers</p>
-                        <p>Short description</p>
+                <div *ngIf="isAnswersButtonPressed" class="posts">
+                    <div *ngFor="let answer of answers">
+                        <div class="answer-item">
+                            <div class="post-item-data">
+                                <p>Post Title</p>
+                                <p>To denis_tsv13@abv.bg | on 26.02.2021 | 5 answers</p>
+                                <p>Short description</p>
+                            </div>
+                            <button class="simple-button orange-button">Read More</button>
+                        </div>
                     </div>
-                    <button class="simple-button orange-button">Read More</button>
                 </div>
             </div>
         </div>
