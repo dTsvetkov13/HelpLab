@@ -2,7 +2,7 @@
 
 ### Purpose ###
 
-HelpLab is a platform for questions and answers related with the school material. It is implemented with Microservice Architecture pattern
+HelpLab is a platform for questions and answers related to the school material. It is implemented with Microservice Architecture pattern
 
 ### Technologies ###
 
