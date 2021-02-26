@@ -4,14 +4,15 @@
   </div>
 
   <div class="navbar-item">
-      <input #searchEl class="search" type="text" placeholder="Search" (keyup.enter)="search(searchEl.value)">
-      <button class="show-categories-button"(click)="showCategories()">Categories</button>
+      <input #searchEl class="search navbar-button" type="text" placeholder="Search" (keyup.enter)="search(searchEl.value)">
+      <button class="show-categories-button navbar-button orange-button" (click)="showCategories()">Categories</button>
   </div>
   
   <div class="navbar-item navbar-menu">
-    <button *ngIf="!hasAccessToken()" md-button md-raised md-cornered class="login-button" (click)="redirectToLogin()">Log In</button>
-    <button *ngIf="!hasAccessToken()" md-button md-raised md-cornered class="sign-up-button" (click)="redirectToSignUp()">Sign Up</button>
-    <button *ngIf="hasAccessToken()" (click)="showAccessToken()">Profile</button>
+    <button md-button md-raised md-cornered class="navbar-button" (click)="redirectToPostCreate()">Create a post</button>>
+    <button *ngIf="!hasAccessToken()" md-button md-raised md-cornered class="navbar-button orange-button" (click)="redirectToLogin()">Log In</button>
+    <button *ngIf="!hasAccessToken()" md-button md-raised md-cornered class="navbar-button" (click)="redirectToSignUp()">Sign Up</button>
+    <button *ngIf="hasAccessToken()" class="navbar-button orange-button" (click)="showAccessToken()">Profile</button>
   </div>
 </div>
 

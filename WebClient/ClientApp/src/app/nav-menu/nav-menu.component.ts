@@ -54,4 +54,16 @@ export class NavMenuComponent {
     console.log(localStorage.getItem("access_token"));
     localStorage.removeItem("access_token");
   }
+
+  redirectToPostCreate() {
+    localStorage.setItem("access_token", "asasas");
+    this.showCategories();
+
+    if(this.hasAccessToken()) {
+      this.router.navigateByUrl("post/create");
+    }
+    else {
+      this.router.navigateByUrl("/login");
+    }
+  }
 }
