@@ -1,14 +1,15 @@
-.content-div {
+.page {
     width: 100%;
     height: 100%;
     display: flex;
     justify-content: center;
-    flex-direction: column;
     background-color: var(--dark-theme-background-color);
     color: var(--dark-theme-primary-text-color);
+    font-size: 1.25rem;
+    font-family: var(--bold-font-family);
 }
 
-.user-profile-data {
+.content {
     width: 60%;
     display: flex;
     justify-content: center;
@@ -17,6 +18,14 @@
     background-color: #494949;
     padding: 1rem 0rem;
     border-radius: 15px;
+}
+
+.user-info {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-self: center;
 }
 
 .user-work-data {
@@ -43,11 +52,61 @@
 }
 
 .user-stats {
+    font-size: 1.25rem;
     padding: 1rem;
     border-left: 0.5px solid #373737;
     border-right: 1px solid #373737;
 }
 
 .user-names-div {
+    font-size: 1.25rem;
     margin: 0.5rem 0rem;
+}
+
+.post-item {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    border: 1px solid black;
+}
+
+.post-item-data {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--regular-font-family);
+    padding: 1rem;
+}
+
+.simple-button {
+    border-radius: 3px;
+    border: none;
+    color: white;
+}
+
+.orange-button {
+    background-color: #ea9215;
+}
+
+.answer-item {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    border: 1px solid black;
+}
+
+.answer-item-data {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--regular-font-family);
+    padding: 1rem;
+}
+
+.simple-button:focus {
+    color: red;
+}
+
+.activity-tab:focus {
+    transform: translateY(1px);
 }
