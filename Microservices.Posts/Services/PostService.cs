@@ -11,6 +11,8 @@ using Microservices.Models.Messages;
 using Microservices.EventBus;
 using Microservices.EventBus.Interfaces;
 using Microservices.Models.Common;
+using System.Linq;
+using Microservices.Models.PostModels;
 
 namespace Microservices.Posts.Services
 {
@@ -71,6 +73,24 @@ namespace Microservices.Posts.Services
         public async Task<Post> Get(string id)
         {
             Post result = await _dbContext.Posts.FirstOrDefaultAsync(x => x.Id.ToString() == id);
+
+            return result;
+        }
+
+        public async Task<List<Post>> GetAllOfUser(string UserId)
+        {
+            if(UserId == null || UserId == "")
+            {
+                return null;
+            }
+
+            var posts = _dbContext.Posts.Where(p => p.AuthorId == UserId);
+            List<Post> result = new List<Post>();
+
+            foreach (var post in posts)
+            {
+                result.Add(post);
+            }
 
             return result;
         }
