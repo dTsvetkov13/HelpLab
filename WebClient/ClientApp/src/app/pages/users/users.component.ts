@@ -5,6 +5,7 @@ import { Answer } from '../../models/answer';
 import { WebRequestsService } from '../../services/web-requests.service';
 import { HttpResponse } from '@angular/common/http';
 import { User } from '../../models/user';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-users',
@@ -19,7 +20,7 @@ export class UsersComponent implements OnInit {
   answers: Answer[] = [];
   user: User;
 
-  constructor(private webRequest: WebRequestsService) { }
+  constructor(private webRequest: WebRequestsService, private router: Router) { }
 
   ngOnInit() {
     this.isPostsButtonPressed = true;
@@ -40,8 +41,11 @@ export class UsersComponent implements OnInit {
         this.isUserLoaded = true;
       },
         error => {
-          console.log("oops", error);
+          console.log("oops", error["status"]);
 
+          if(error["status"] == 401) {
+            this.router.navigateByUrl("login");
+          }
         });
     } else {
       this.webRequest.get("api/users/" + id).subscribe((res: HttpResponse<any>) => {
@@ -52,7 +56,7 @@ export class UsersComponent implements OnInit {
         this.isUserLoaded = true;
       },
         error => {
-          console.log("oops", error);
+          console.log("oops", error["status"]);
         });
     }
 
