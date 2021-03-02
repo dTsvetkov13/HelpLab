@@ -34,11 +34,13 @@ export class UsersComponent implements OnInit {
 
     if (id == "me") {
       this.webRequest.getAuthorized("api/users").subscribe((res: HttpResponse<any>) => {
-        console.log("Success login" + res.status);
+        console.log("Success " + res.status);
         data = JSON.parse(res.body);
         console.log(data);
-        this.user = new User(data["name"], data["surname"], parseInt(data["answersCount"]), parseInt(data["postsCount"]))
+        this.user = new User(data["id"], data["name"], data["surname"], parseInt(data["answersCount"]), parseInt(data["postsCount"]))
         this.isUserLoaded = true;
+
+        console.log("User id: " + this.user.id);
       },
         error => {
           console.log("oops", error["status"]);
@@ -46,27 +48,58 @@ export class UsersComponent implements OnInit {
           if(error["status"] == 401) {
             this.router.navigateByUrl("login");
           }
+
+          //Handle server error
         });
     } else {
       this.webRequest.get("api/users/" + id).subscribe((res: HttpResponse<any>) => {
-        console.log("Success login" + res.status);
+        console.log("Success " + res.status);
         data = JSON.parse(res.body);
         console.log(data);
-        this.user = new User(data["name"], data["surname"], parseInt(data["answersCount"]), parseInt(data["postsCount"]))
+        this.user = new User(data["id"], data["name"], data["surname"], parseInt(data["answersCount"]), parseInt(data["postsCount"]))
         this.isUserLoaded = true;
       },
         error => {
           console.log("oops", error["status"]);
+
+          //Handle bad request
+          //Handle server error
         });
     }
-
     this.posts[0] = new Post("Title", "Descrip", "12.3.2002", 2, [])
     this.posts[1] = new Post("Title", "Descrip", "12.3.2002", 2, [])
 
     this.answers[0] = new Answer("Title", "12.23.2001", 1, null);
   }
 
-    
+  loadPosts() {
+    this.webRequest.get("posts?userId=" + this.user.id).subscribe((res: HttpResponse<any>) => {
+      console.log("Success " + res.status);
+      let data = JSON.parse(res.body);
+      console.log(data);
+    },
+      error => {
+        console.log("oops", error["status"]);
+
+        //Handle bad request
+        //Handle server error
+      });
+  }
+
+  loadAnswers() {
+    this.webRequest.get("answers?userId=" + this.user.id).subscribe((res: HttpResponse<any>) => {
+      console.log("Success " + res.status);
+      let data = JSON.parse(res.body);
+      console.log(data);
+    },
+      error => {
+        console.log("oops", error["status"]);
+
+        //Handle bad request
+        //Handle server error
+      });
+  }
+
   showAnswers() {
     this.isPostsButtonPressed = false;
     this.isAnswersButtonPressed = true;
