@@ -1,6 +1,5 @@
 <div class="navbar">
   <div class="navbar-item logo-div" (click)="redirectToHome()">
-
   </div>
 
   <div class="navbar-item">
@@ -10,10 +9,11 @@
   
   <div class="navbar-item navbar-menu">
     <button md-button md-raised md-cornered class="navbar-button" (click)="redirectToPostCreate()">Create a post</button>
+    <button md-button md-raised md-cornered class="navbar-button" (click)="loadLatestPosts()">Latest posts</button>
     <button *ngIf="!hasAccessToken()" md-button md-raised md-cornered class="navbar-button orange-button" (click)="redirectToLogin()">Log In</button>
     <button *ngIf="!hasAccessToken()" md-button md-raised md-cornered class="navbar-button" (click)="redirectToSignUp()">Sign Up</button>
     <button *ngIf="hasAccessToken()" class="navbar-button orange-button" (click)="showProfile()">Profile</button>
-    <button *ngIf="hasAccessToken()" class="navbar-button orange-button" (click)="logOut()">Log Out</button>
+    <button *ngIf="hasAccessToken()" class="navbar-button" (click)="logOut()">Log Out</button>
   </div>
 </div>
 

@@ -76,4 +76,8 @@ export class NavMenuComponent {
       this.router.navigateByUrl("/login");
     }
   }
+
+  loadLatestPosts() {
+    this.router.navigateByUrl("posts");
+  }
 }
