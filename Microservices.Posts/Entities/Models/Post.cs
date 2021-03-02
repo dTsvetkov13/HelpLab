@@ -25,6 +25,8 @@ namespace Microservices.Posts.Entities.Models
 
         public string AuthorId { get; set; }
 
+        public virtual User Author { get; set; }
+
         public int AnswersCount { get; set; }
     }
 }
