@@ -6,6 +6,7 @@ using Microservices.Posts.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
+using System.Collections.Generic;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
@@ -29,6 +30,22 @@ namespace Microservices.Posts.Controllers
             if (post != null)
             {
                 return Ok(post);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Get([FromQuery] GetInputModel input)
+        {
+            List<Post> posts = await _postService.GetAllOfUser(input.UserId);
+
+            if (posts != null
+                && posts.Count > 0)
+            {
+                return Ok(posts);
             }
             else
             {

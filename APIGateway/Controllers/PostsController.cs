@@ -1,4 +1,5 @@
 ﻿using APIGateway.Models.InputModels;
+using APIGateway.Models.InputModels.PostInputModels;
 using APIGateway.Services;
 using Microservices.Models;
 using Microservices.Models.Common;
@@ -47,6 +48,21 @@ namespace APIGateway.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Get([FromQuery] GetPostInputModel input)
+        {
+            var result = await _httpSender.SendGetAsync<List<GetPostResponse>>(PostsRoot + "?UserId=" + input.UserId);
+
+            if (result != null)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> Create(CreatePostInputModel input)
@@ -85,6 +101,7 @@ namespace APIGateway.Controllers
         }
 
         [HttpPut]
+        [Authorize]
         public async Task<IActionResult> Update(UpdatePostInputModel input)
         {
             var result = await _httpSender.SendPutAsync<Response, UpdatePostInputModel>(input, PostsRoot);
