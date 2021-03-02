@@ -44,9 +44,16 @@ export class UsersComponent implements OnInit {
 
         });
     } else {
-      data = this.webRequest.get("api/users/" + id);
-      this.user = new User(data["name"], data["surname"], parseInt(data["answersCount"]), parseInt(data["postsCount"]))
-      this.isUserLoaded = true;
+      this.webRequest.get("api/users/" + id).subscribe((res: HttpResponse<any>) => {
+        console.log("Success login" + res.status);
+        data = JSON.parse(res.body);
+        console.log(data);
+        this.user = new User(data["name"], data["surname"], parseInt(data["answersCount"]), parseInt(data["postsCount"]))
+        this.isUserLoaded = true;
+      },
+        error => {
+          console.log("oops", error);
+        });
     }
 
     this.posts[0] = new Post("Title", "Descrip", "12.3.2002", 2, [])
