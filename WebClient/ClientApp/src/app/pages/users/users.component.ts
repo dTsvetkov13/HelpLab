@@ -41,6 +41,8 @@ export class UsersComponent implements OnInit {
         this.isUserLoaded = true;
 
         console.log("User id: " + this.user.id);
+
+        this.loadPosts();
       },
         error => {
           console.log("oops", error["status"]);
@@ -66,28 +68,31 @@ export class UsersComponent implements OnInit {
           //Handle server error
         });
     }
-    this.posts[0] = new Post("Title", "Descrip", "12.3.2002", 2, [])
-    this.posts[1] = new Post("Title", "Descrip", "12.3.2002", 2, [])
 
     this.answers[0] = new Answer("Title", "12.23.2001", 1, null);
   }
 
   loadPosts() {
-    this.webRequest.get("posts?userId=" + this.user.id).subscribe((res: HttpResponse<any>) => {
-      console.log("Success " + res.status);
+    this.webRequest.get("api/posts?UserId=" + this.user.id).subscribe((res: HttpResponse<any>) => {
       let data = JSON.parse(res.body);
+
+      this.posts = [];
+      for(let i = 0; i < data.length; i++) {
+        this.posts[i] = new Post(data[i]["id"], data[i]["title"], data[i]["description"],
+                                 data[i]["publishedAt"], data[i]["answersCount"], [])
+      }
+
       console.log(data);
     },
       error => {
         console.log("oops", error["status"]);
 
         //Handle bad request
-        //Handle server error
       });
   }
 
   loadAnswers() {
-    this.webRequest.get("answers?userId=" + this.user.id).subscribe((res: HttpResponse<any>) => {
+    this.webRequest.get("api/answers?userId=" + this.user.id).subscribe((res: HttpResponse<any>) => {
       console.log("Success " + res.status);
       let data = JSON.parse(res.body);
       console.log(data);
@@ -108,5 +113,10 @@ export class UsersComponent implements OnInit {
   showPosts() {
     this.isPostsButtonPressed = true;
     this.isAnswersButtonPressed = false;
+  }
+
+  readMore(postId: string) {
+    console.log(postId)
+    this.router.navigateByUrl("posts/" + postId);
   }
 }
