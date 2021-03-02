@@ -1,15 +1,17 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Search } from '../models/search';
+import { WebRequestsService } from 'src/app/services/web-requests.service';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-nav-menu',
   templateUrl: './nav-menu.component.html',
-  styleUrls: ['./nav-menu.component.css']
+  styleUrls: ['./nav-menu.component.css'],
 })
 
 export class NavMenuComponent {
-  constructor(private router: Router) { }
+  constructor(private router: Router, private webRequest: WebRequestsService) { }
 
   showCategoriesStatement : boolean = false;
   searchObject = new Search();
@@ -50,17 +52,25 @@ export class NavMenuComponent {
     }
   }
 
-  showAccessToken() {
+  logOut() {
     console.log(localStorage.getItem("access_token"));
     localStorage.removeItem("access_token");
+    this.router.navigateByUrl("/");
+  }
+
+  showProfile() {
+    let id;
+
+    console.log("Show profile");
+
+    this.router.navigateByUrl("users/me");
   }
 
   redirectToPostCreate() {
-    localStorage.setItem("access_token", "asasas");
-    this.showCategories();
+    this.showCategoriesStatement = false;
 
     if(this.hasAccessToken()) {
-      this.router.navigateByUrl("post/create");
+      this.router.navigateByUrl("posts/create");
     }
     else {
       this.router.navigateByUrl("/login");

@@ -9,10 +9,11 @@
   </div>
   
   <div class="navbar-item navbar-menu">
-    <button md-button md-raised md-cornered class="navbar-button" (click)="redirectToPostCreate()">Create a post</button>>
+    <button md-button md-raised md-cornered class="navbar-button" (click)="redirectToPostCreate()">Create a post</button>
     <button *ngIf="!hasAccessToken()" md-button md-raised md-cornered class="navbar-button orange-button" (click)="redirectToLogin()">Log In</button>
     <button *ngIf="!hasAccessToken()" md-button md-raised md-cornered class="navbar-button" (click)="redirectToSignUp()">Sign Up</button>
-    <button *ngIf="hasAccessToken()" class="navbar-button orange-button" (click)="showAccessToken()">Profile</button>
+    <button *ngIf="hasAccessToken()" class="navbar-button orange-button" (click)="showProfile()">Profile</button>
+    <button *ngIf="hasAccessToken()" class="navbar-button orange-button" (click)="logOut()">Log Out</button>
   </div>
 </div>
 
@@ -26,6 +27,17 @@
     <div class="categories-right-side">
       <input class="category-input" placeholder="Publisher" type="text">
       <input class="category-input" placeholder="Page" type="text">
+      <div class="d-inline-block" ngbDropdown #myDrop="ngbDropdown">
+        <button id="dropdownManual" ngbDropdownAnchor (focus)="myDrop.open()">Subject</button>
+        <div ngbDropdownMenu aria-labelledby="dropdownManual">
+          <button ngbDropdownItem>Math</button>
+          <button ngbDropdownItem>Literature</button>
+          <button ngbDropdownItem>Chemistry</button>
+          <button ngbDropdownItem>Biology</button>
+          <button ngbDropdownItem>History</button>
+          <button ngbDropdownItem>Geography</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
