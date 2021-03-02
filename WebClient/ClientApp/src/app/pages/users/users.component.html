@@ -1,15 +1,15 @@
 <div class="page">
-    <div class="content">
+    <div *ngIf="isUserLoaded" class="content">
         <div class="user-info">
             <div class="user-photo-div">
                 <img id="profile-pic" src="../../../assets/user-photo-example.png"> 
             </div>
                  <div class="user-names-div align-self-center">
-                <p>John Doe</p>
+                <p>{{user.name}} {{user.surname}}</p>
             </div>
             <div class="additional-user-data align-self-center">
-                <span class="user-stats">1242 answers</span>
-                <span class="user-stats">123 posts</span>
+                <span class="user-stats">{{user.answersCount}} answers</span>
+                <span class="user-stats">{{user.postsCount}} posts</span>
             </div>
         </div>
         <div class="user-activity">
