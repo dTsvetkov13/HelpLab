@@ -52,6 +52,23 @@ namespace APIGateway.Controllers
             return result != null ? Ok(result) : BadRequest("Invalid input");
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(string id)
+        {
+            GetUserResponse result;
+
+            try
+            {
+                result = await _httpSender.SendGetAsync<GetUserResponse>(UsersRoot + "?id=" + id);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500);
+            }
+
+            return result != null ? Ok(result) : BadRequest("Invalid input");
+        }
+
         [HttpPost]
         public async Task<IActionResult> Register(RegisterInputModel input)
         {
