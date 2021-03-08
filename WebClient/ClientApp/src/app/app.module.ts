@@ -1,8 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 
 import { AppComponent } from './app.component';
@@ -14,6 +13,13 @@ import { LoginComponent } from './pages/login/login.component';
 import { SignUpComponent } from './pages/sign-up/sign-up.component';
 import { UsersComponent } from './pages/users/users.component';
 
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { NgbDropdown } from '@ng-bootstrap/ng-bootstrap';
+import { LatestPostsComponent } from './pages/latest-posts/latest-posts.component';
+import Swal from 'sweetalert2';
+import { RoutingModule } from './routing/routing.module';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -24,23 +30,18 @@ import { UsersComponent } from './pages/users/users.component';
     LoginComponent,
     SignUpComponent,
     UsersComponent,
+    LatestPostsComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
-    RouterModule.forRoot([
-      { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'home', component: HomeComponent, pathMatch: 'full' },
-      { path: 'posts', component: PostComponent, pathMatch: 'full' },
-      { path: 'login', component: LoginComponent, pathMatch: 'full'},
-      { path: 'posts/create', component: CreatePostComponent, pathMatch: 'full'},
-      { path: 'signup', component: SignUpComponent, pathMatch: 'full'},
-      { path: "users/:id", component: UsersComponent, pathMatch: "full"}
-    ]),
+    RoutingModule,
     MatButtonModule,
+    NgbModule,
+    RoutingModule
   ],
-  providers: [],
+  providers: [ { provide: LOCALE_ID, useValue: ['bg', "en"] }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
