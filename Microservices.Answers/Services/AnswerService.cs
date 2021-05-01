@@ -55,6 +55,12 @@ namespace Microservices.Answers.Services
                     Name = authorName
                 });
             }*/
+                if(guidAnswerId != Guid.Empty
+                   && guidPostId == Guid.Empty)
+                {
+                    Get(answerId).Result.AnswersCount++;
+                }
+
                 _dbContext.SaveChanges();
 
                 //Send message to the Microservices.Users
@@ -74,7 +80,13 @@ namespace Microservices.Answers.Services
 
             return result;
         }
-        
+
+        public List<Answer> GetByPostId(string id)
+        {
+            var result = _dbContext.Answers.Where(x => x.PostId.ToString() == id).ToList();
+            return result;
+        }
+
         public async Task<Status> Update(Guid answerId, string text, DateTime editedAt)
         {
             try

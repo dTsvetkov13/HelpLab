@@ -46,6 +46,29 @@ namespace Microservices.Answers.Controllers
             }
         }
 
+        [HttpGet("postId/{id}")]
+        public async Task<IActionResult> GetByPostId(string id)
+        {
+            List<Answer> result = _answerService.GetByPostId(id);
+
+            List<GetAnswerModel> modifiedResult = new List<GetAnswerModel>();
+
+            foreach (var item in result)
+            {
+                modifiedResult.Add(new GetAnswerModel
+                {
+                    Text = item.Text,
+                    PostId = item.PostId,
+                    AnswerId = item.AnswerId,
+                    AuthorId = item.AuthorId,
+                    LastEditedAt = item.LastEditedAt,
+                    PublishedAt = item.PublishedAt
+                });
+            }
+
+            return Ok(modifiedResult);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create(CreateInputModel input)
         {

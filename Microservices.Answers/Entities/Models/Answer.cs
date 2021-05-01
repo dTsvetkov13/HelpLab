@@ -27,6 +27,8 @@ namespace Microservices.Answers.Entities.Models
 
         public Guid AnswerId { get; set; }
 
+        public virtual User Author { get; set; }
+
         public int AnswersCount { get; set; }
     }
 }
