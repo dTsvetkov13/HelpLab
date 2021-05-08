@@ -53,7 +53,8 @@ export class UsersComponent implements OnInit {
 
           //Handle server error
         });
-    } else {
+    }
+    else {
       this.webRequest.get("api/users/" + id).subscribe((res: HttpResponse<any>) => {
         console.log("Success " + res.status);
         data = JSON.parse(res.body);
@@ -69,7 +70,7 @@ export class UsersComponent implements OnInit {
         });
     }
 
-    this.answers[0] = new Answer("Title", "12.23.2001", 1, null);
+    this.answers[0] = new Answer("", "Title", "12.23.2001", 1, null, null);
   }
 
   loadPosts() {
@@ -79,7 +80,8 @@ export class UsersComponent implements OnInit {
       this.posts = [];
       for(let i = 0; i < data.length; i++) {
         this.posts[i] = new Post(data[i]["id"], data[i]["title"], data[i]["description"],
-                                 data[i]["publishedAt"], data[i]["answersCount"], [])
+                                 data[i]["publishedAt"], data[i]["answersCount"], [],
+                                 new User("", data[i]["authorName"], "", 0, 0))
       }
 
       console.log(data);
@@ -117,6 +119,6 @@ export class UsersComponent implements OnInit {
 
   readMore(postId: string) {
     console.log(postId)
-    this.router.navigateByUrl("posts/" + postId);
+    this.router.navigateByUrl("posts/id/" + postId);
   }
 }

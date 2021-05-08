@@ -1,0 +1,10 @@
+.message {
+    font-family: var(--italic-font-family);
+    font-weight: 700;
+    text-align: center;
+}
+
+.center-content {
+    width: 100%;
+    align-items: center;
+}

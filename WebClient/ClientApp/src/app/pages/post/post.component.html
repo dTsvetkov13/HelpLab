@@ -1,28 +1,54 @@
 <div class="page">
     <div class="left-side">
     </div>
-    <div class="right-side">
+    <div *ngIf="isPostLoaded" class="right-side">
         <div class="post-data">
             <div class="post-data-question">
-                <h1>The question is placed here!</h1>
-                <p>Here you will have the posted date</p>
-                <p class="border-bottom"></p>
+                <h1 [innerHTML]=post.title></h1>
+                <div class="meta-data">Author: {{post.author.name}} {{post.author.surname}}</div>
+                <div class="meta-data">Posted on {{post.publishedAt}}</div>
+                <mat-divider></mat-divider>
+                <!-- <p class="border-bottom"></p> -->
             </div>
             <div class="post-data-description">
-                <p>The description is placed here!</p>
-                <p>Here you will have the descriptiondate</p>
-                <p class="post-end-border-bottom"></p>
+                <p [innerHTML]=post.description></p>
+                <p>Asnwers count: {{post.answersCount}}</p>
+                <mat-divider></mat-divider>
+                <!-- <p class="post-end-border-bottom"></p> -->
             </div>
-            <div class="answers-div">
+            <div class="add-answer-button-div">
+                <button class="simple-button orange-button add-answer-button" (click)="ShowAddAnswerField()">Add answer</button>
+            </div>
+            <div *ngIf="showAddAnswerField" class="add-answer-field-div">
+                <ckeditor [editor]="Editor" (change)="onChange($event)" data="Write your answer here"></ckeditor>
+                <div class="save-answer-button-div">
+                    <button class="simple-button orange-button save-answer-button" (click)="SaveAnswer()">Save answer</button>
+                </div>
+            </div>
+            <div *ngIf="hasAnswers" class="answers-div">
                 <h5>Answers:</h5>
-
-                <p>Text</p>
-                <p>PublishedAt</p>
-                <p>Author</p>
+                <div *ngFor="let answer of answers">
+                    <div class="answer-div">
+                        <div [innerHTML]=answer.text></div>
+                        <div class="answer-posted-on-div">
+                            <div class="inline-block-div meta-data">
+                                <span>Author: </span>
+                                <span [innerHTML]=answer.author.name></span>
+                                <span [innerHTML]=answer.author.surname></span>
+                            </div>
+                            <div class="inline-block-div meta-data">
+                                <span>Posted on: </span>
+                                <span [innerHTML]=answer.publishedAt></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="!hasAnswers">
+                <h5>There are not any answers.</h5>
             </div>
         </div>
         <div class="author-data">
-
         </div>
     </div>
 </div>

@@ -19,25 +19,45 @@
 
 <div *ngIf="showCategoriesStatement" class="show-categories-div">
   <div class="categories-div">
-    <div class="categories-left-side">
-      <input class="category-input" [(ngModel)]="searchObject.subject" placeholder="Subject" type="text">
-      <input class="category-input" placeholder="Class" type="text">
-      <input class="category-input" placeholder="Exercise" type="text">
-    </div>
-    <div class="categories-right-side">
-      <input class="category-input" placeholder="Publisher" type="text">
-      <input class="category-input" placeholder="Page" type="text">
-      <div class="d-inline-block" ngbDropdown #myDrop="ngbDropdown">
-        <button id="dropdownManual" ngbDropdownAnchor (focus)="myDrop.open()">Subject</button>
-        <div ngbDropdownMenu aria-labelledby="dropdownManual">
-          <button ngbDropdownItem>Math</button>
-          <button ngbDropdownItem>Literature</button>
-          <button ngbDropdownItem>Chemistry</button>
-          <button ngbDropdownItem>Biology</button>
-          <button ngbDropdownItem>History</button>
-          <button ngbDropdownItem>Geography</button>
-        </div>
+    <div class="categories-top-div">
+      <div class="categories-left-side">
+        <mat-form-field appearance="fill" class="categoriesSelect">
+          <mat-label>Select a subject</mat-label>
+          <mat-select id="mySelectId">
+            <mat-option >None</mat-option>
+            <mat-option value="volvo">Volvo</mat-option>
+            <mat-option value="saab">Saab</mat-option>
+            <mat-option value="mercedes">Mercedes</mat-option>
+            <mat-option value="audi">Audi</mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
+      <div class="categories-right-side">
+        <mat-form-field appearance="fill" class="categoriesSelect">
+          <mat-label>Select a subject</mat-label>
+          <mat-select id="mySelectId">
+            <mat-option >None</mat-option>
+            <mat-option value="volvo">Volvo</mat-option>
+            <mat-option value="saab">Saab</mat-option>
+            <mat-option value="mercedes">Mercedes</mat-option>
+            <mat-option value="audi">Audi</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="categories-bottom-div">
+      <mat-form-field>
+        <mat-label>Class</mat-label>
+        <input matInput type="number" min="1" max="12">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Exercise</mat-label>
+        <input matInput type="text">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Page</mat-label>
+        <input matInput type="text">
+      </mat-form-field>
     </div>
   </div>
 </div>

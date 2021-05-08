@@ -1,6 +1,6 @@
 .page-content {
     width: 100%;
-    height: 100%;
+    height: 90vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -10,7 +10,7 @@
     text-align: center;
     background-image: url("../../../assets/girl-studying.png");
     background-repeat: no-repeat;
-    background-size: contain;
+    background-size: cover;
     background-position: center;
 }
 

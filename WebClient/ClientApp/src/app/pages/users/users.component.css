@@ -1,6 +1,6 @@
 .page {
     width: 100%;
-    min-height: 100vh;
+    min-height: 90vh;
     display: flex;
     justify-content: center;
     background-color: var(--dark-theme-background-color);
@@ -101,6 +101,10 @@
     flex-direction: column;
     font-family: var(--regular-font-family);
     padding: 1rem;
+}
+
+.activity-tab {
+    margin: 5px 5px;
 }
 
 .activity-tab:focus {

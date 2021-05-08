@@ -1,9 +1,11 @@
 .page {
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    min-height: 90vh;
     display: flex;
     flex-direction: row;
     justify-content: center;
+    background-color: var(--dark-theme-background-color);
+    color: var(--dark-theme-primary-text-color);
 }
 
 .left-side {
@@ -13,7 +15,7 @@
 
 .right-side {
     width: 75%;
-    height: 100%;
+    min-height: 100%;
     display: flex;
     flex-direction: row;
     border-left: 1px solid #262626;
@@ -27,7 +29,8 @@
 .author-data {
     width: 33.33%;
     height: 100%;
-    background-color: green;
+    padding-left: 0.5rem;
+    border-left: 1px solid #262626;
 }
 
 .post-data-question {
@@ -39,16 +42,86 @@
     height: min-content;
 }
 
-.border-bottom {
+/* .border-bottom {
     width: 70%;
-    border-bottom: 2px dashed black;
+    border-bottom: 2px dashed var(--dark-theme-primary-text-color);
 }
 
 .post-end-border-bottom {
     width: 80%;
-    border-bottom: 2px dashed black;
+    border-bottom: 2px dashed var(--dark-theme-primary-text-color);
+} */
+
+mat-divider {
+    margin: 10px 0;
+    border-top-color: var(--dark-theme-primary-text-color);
 }
 
-.post-data > * {
-    margin-left: 20px;
+.meta-data {
+    font-family: var(--italic-font-family);
+}
+
+.post-data {
+    padding: 0 20px;
+}
+
+.add-answer-button-div {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-top: 0.25rem;
+    margin-bottom: 1rem;
+}
+
+.add-answer-field-div {
+    min-height: 15%;
+}
+
+.add-answer-input-field {
+    width: 100%;
+    height: 100%;
+}
+
+.simple-button {
+    border-radius: 3px;
+    border: none;
+    color: var(--dark-theme-primary-text-color);
+}
+
+.orange-button {
+    background-color: var(--dark-theme-primary-button-color);
+}
+
+.add-answer-button {
+    padding: 0.5rem;
+}
+
+.save-answer-button-div {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.save-answer-button {
+    padding: 0.5rem;
+}
+
+.answer-div {
+    width: 100%;
+    min-height: 10%;
+    border-bottom: 2px dashed var(--dark-theme-primary-text-color);
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.answer-posted-on-div {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.inline-block-div {
+    display: inline;
 }

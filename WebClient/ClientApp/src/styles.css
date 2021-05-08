@@ -13,6 +13,11 @@
   src: url("./assets/fonts/Raleway/static/Raleway-SemiBold.ttf");
 }
 
+@font-face {
+  font-family: "Italic";
+  src: url("./assets/fonts/Raleway/static/Raleway-Italic.ttf");
+}
+
 a {
   color: #0366d6;
 }
@@ -34,7 +39,15 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   --regular-font-family: "Regular", sans-serif;
   --bold-font-family: "Bold", sans-serif;
   --medium-font-family: "Medium", sans-serif;
+  --italic-font-family: "Italic", sans-serif;
   --dark-theme-background-color: #373737;
   --dark-theme-primary-button-color: #ea9215;
   --dark-theme-primary-text-color: #e5e2dd;
+}
+
+.ck-editor__editable_inline {
+  min-height: 80%;
+  max-height: 100%;
+  min-width: 80%;
+  max-width: 100%;
 }

@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { Search } from '../models/search';
 import { WebRequestsService } from 'src/app/services/web-requests.service';
 import { HttpResponse } from '@angular/common/http';
+
 
 @Component({
   selector: 'app-nav-menu',
@@ -17,6 +18,14 @@ export class NavMenuComponent {
   searchObject = new Search();
 
   ngOnInit() {
+  }
+
+  @HostListener('document:click', ['$event'])
+  removeInputs(event): void {
+    const eventTarget = event.target;
+    //console.log(event);
+    //console.log(eventTarget);
+    //console.log(eventTarget.classList);
   }
 
   search(query : string) {
@@ -40,9 +49,7 @@ export class NavMenuComponent {
     this.router.navigateByUrl("/signup");
   }
 
-  hasAccessToken() {
-    console.log(localStorage.getItem("access_token"));
-    
+  hasAccessToken() {    
     if ((localStorage.getItem("access_token") === "undefined")
         || localStorage.getItem("access_token") === null) {
       return false;
@@ -78,6 +85,6 @@ export class NavMenuComponent {
   }
 
   loadLatestPosts() {
-    this.router.navigateByUrl("posts");
+    this.router.navigateByUrl("posts/latest");
   }
 }

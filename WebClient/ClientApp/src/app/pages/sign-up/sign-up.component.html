@@ -8,8 +8,8 @@
         </li>
       </ul>
     </div>
-    <input class="modal-box-input" #name optional type="text" placeholder="Name">
-    <input class="modal-box-input" #surname optional type="text" placeholder="Surname">
+    <input class="modal-box-input" #name required optional type="text" placeholder="Name">
+    <input class="modal-box-input" #surname required optional type="text" placeholder="Surname">
     <input class="modal-box-input" #email required type="text" placeholder="Email">
     <input class="modal-box-input" #password required type="password" placeholder="Password">
     <button class="modal-box-button" (click)="signUp(name.value, surname.value, email.value, password.value)">Sign up</button>

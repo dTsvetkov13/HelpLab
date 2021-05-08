@@ -13,8 +13,8 @@
             </div>
         </div>
         <div class="user-activity">
-            <button id="user-posts" class="activity-tab" (click)="showPosts()">Posts</button>
-            <button id="user-answers" class="activity-tab" (click)="showAnswers()">Answers</button>
+            <button mat-raised-button id="user-posts" class="activity-tab" (click)="showPosts()">Posts</button>
+            <button mat-raised-button id="user-answers" class="activity-tab" (click)="showAnswers()">Answers</button>
             <div class="activity-dashboard">
                 <div *ngIf="isPostsButtonPressed" class="posts">
                     <div *ngFor="let post of posts">

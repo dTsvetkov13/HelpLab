@@ -8,15 +8,21 @@
 
 .post-form-div {
     width: 100%;
+    min-height: 90vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: var(--dark-theme-background-color);
 }
 
 .content-div {
     width: 50%;
     justify-content: center;
     align-items: center;
+    background-color: #494949;
+    border-radius: 15px;
+    padding: 2rem 3rem;
+    color: var(--dark-theme-primary-text-color  )
 }
 
 .create-button-div {
@@ -26,6 +32,32 @@
     align-items: center;
 }
 
+.form-button {
+    background-color: var(--dark-theme-background-color);
+    color: var(--dark-theme-primary-text-color);
+    border-radius: 15px;
+}
+
 .form-title {
+    text-align: center;
+}
+
+.ck-editor {
+    background-color: var(--dark-theme-background-color);
+    color: var(--dark-theme-primary-text-color);
+}
+
+.description-div {
+    min-height: 500px;
+}
+
+.textarea {
+    height: 100%;
+}
+
+.tip-text {
+    font-family: var(--italic-font-family);
+    color: var(--dark-theme-primary-text-color);/*black;*/
+    font-weight: 700;
     text-align: center;
 }

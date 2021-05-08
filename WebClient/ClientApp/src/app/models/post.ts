@@ -1,3 +1,5 @@
+import { User } from "./user";
+
 export class Post {
 
     constructor(
@@ -6,7 +8,8 @@ export class Post {
       public description: string,
       public publishedAt: string,
       public answersCount: number,
-      public categories: string[]
+      public categories: string[],
+      public author: User
     ) {  }
   
   }
